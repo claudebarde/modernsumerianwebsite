@@ -1,0 +1,38 @@
+.main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.mainMobile {
+  display: none;
+}
+
+.description {
+  max-width: 70%;
+  padding: 50px;
+}
+
+.landingPicture {
+  width: 70%;
+  object-fit: cover;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .main {
+    display: none;
+  }
+
+  .mainMobile {
+    height: 100vh;
+    padding: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
