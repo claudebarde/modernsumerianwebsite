@@ -26,6 +26,7 @@ const Footer = () => {
             href="https://www.facebook.com/ModernSumerian/"
             target="_blank"
             rel="noopener noreferrer"
+            className={styles.footerLink}
           >
             <Icon type="facebook" theme="filled" />
           </a>
@@ -34,6 +35,7 @@ const Footer = () => {
             href="http://psd.museum.upenn.edu/"
             target="_blank"
             rel="noopener noreferrer"
+            className={styles.footerLink}
           >
             ePSD
           </a>

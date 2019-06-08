@@ -9,7 +9,8 @@ import {
   Input,
   Select,
   Badge,
-  List
+  List,
+  Tooltip
 } from "antd";
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 
@@ -29,6 +30,8 @@ const Conjugator = () => {
     proclitic: "#ffa940",
     ventive: "#36cfc9"
   };
+
+  const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
 
   const [stem, setStem] = useState("");
   const [transitive, setTransitive] = useState(undefined);
@@ -81,49 +84,134 @@ const Conjugator = () => {
       if (item.type === "prefix") {
         switch (item.function) {
           case "proclitic":
-            coloredPrefixes[0] = `<span style="color:${COLORS.proclitic}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[0] = (
+              <Tooltip
+                placement="bottom"
+                title="proclitic"
+                key="verbchain-proclitic"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.proclitic }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "preformative":
-            coloredPrefixes[1] = `<span style="color:${COLORS.preformative}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[1] = (
+              <Tooltip
+                placement="bottom"
+                title="preformative"
+                key="verbchain-preformative"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.preformative }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "ventive":
-            coloredPrefixes[2] = `<span style="color:${COLORS.ventive}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[2] = (
+              <Tooltip
+                placement="bottom"
+                title="ventive"
+                key="verbchain-ventive"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.ventive }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "indirect object":
-            coloredPrefixes[3] = `<span style="color:${
-              COLORS.indirectObject
-            }">${item.form}</span>`;
+            coloredPrefixes[3] = (
+              <Tooltip
+                placement="bottom"
+                title="indirect object"
+                key="verbchain-indirectObject"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.indirectObject }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "initial person prefix":
-            coloredPrefixes[4] = `<span style="color:${
-              COLORS.initialPersonPrefix
-            }">${item.form}</span>`;
+            coloredPrefixes[4] = (
+              <Tooltip
+                placement="bottom"
+                title="initial person prefix"
+                key="verbchain-initialPersonPrefix"
+              >
+                <span
+                  style={{ ...affixesStyle, color: COLORS.initialPersonPrefix }}
+                >
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "dimensional prefix":
-            coloredPrefixes[5] = `<span style="color:${
-              COLORS.dimensionalPrefix
-            }">${item.form}</span>`;
+            coloredPrefixes[5] = (
+              <Tooltip
+                placement="bottom"
+                title="dimensional prefix"
+                key="verbchain-dimensionalPrefix"
+              >
+                <span
+                  style={{ ...affixesStyle, color: COLORS.dimensionalPrefix }}
+                >
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "oblique object":
-            coloredPrefixes[6] = `<span style="color:${COLORS.obliqueObject}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[6] = (
+              <Tooltip
+                placement="bottom"
+                title="oblique object"
+                key="verbchain-obliqueObject"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.obliqueObject }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "transitive direct object":
-            coloredPrefixes[7] = `<span style="color:${COLORS.directObject}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[7] = (
+              <Tooltip
+                placement="bottom"
+                title="direct object"
+                key="verbchain-directObject"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.directObject }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           case "transitive subject":
-            coloredPrefixes[8] = `<span style="color:${COLORS.subject}">${
-              item.form
-            }</span>`;
+            coloredPrefixes[8] = (
+              <Tooltip
+                placement="bottom"
+                title="subject"
+                key="verbchain-subject"
+              >
+                <span style={{ ...affixesStyle, color: COLORS.subject }}>
+                  {item.form}
+                </span>
+                <span style={affixesStyle}>-</span>
+              </Tooltip>
+            );
             break;
           default:
             break;
@@ -132,14 +220,32 @@ const Conjugator = () => {
         switch (item.function) {
           case "intransitive subject":
           case "transitive subject":
-            coloredSuffixes[0] = `<span style="color:${COLORS.subject}">${
-              item.form
-            }</span>`;
+            coloredSuffixes[0] = (
+              <Tooltip
+                placement="bottom"
+                title="subject"
+                key="verbchain-subject"
+              >
+                <span style={affixesStyle}>-</span>
+                <span style={{ ...affixesStyle, color: COLORS.subject }}>
+                  {item.form}
+                </span>
+              </Tooltip>
+            );
             break;
           case "transitive direct object":
-            coloredSuffixes[1] = `<span style="color:${COLORS.directObject}">${
-              item.form
-            }</span>`;
+            coloredSuffixes[1] = (
+              <Tooltip
+                placement="bottom"
+                title="subjdirect objectct"
+                key="verbchain-directObject"
+              >
+                <span style={affixesStyle}>-</span>
+                <span style={{ ...affixesStyle, color: COLORS.directObject }}>
+                  {item.form}
+                </span>
+              </Tooltip>
+            );
             break;
           default:
             break;
@@ -147,13 +253,14 @@ const Conjugator = () => {
       }
     });
 
-    return (
-      coloredPrefixes.filter(el => !!el).join("-") +
-      "-" +
-      stem +
-      "-" +
-      coloredSuffixes.filter(el => !!el).join("-")
-    );
+    return coloredPrefixes
+      .filter(el => !!el)
+      .concat(
+        <span key="verbchain-stem" style={affixesStyle}>
+          {stem}
+        </span>
+      )
+      .concat(coloredSuffixes.filter(el => !!el));
   };
 
   const displayConjugatedVerb = () => {
@@ -173,12 +280,7 @@ const Conjugator = () => {
                         {item}
                       </span>
                     </List.Item>
-                    <List.Item>
-                      <span
-                        style={{ fontWeight: "bold", fontSize: "1.2rem" }}
-                        dangerouslySetInnerHTML={{ __html: colorizeAffixes() }}
-                      />
-                    </List.Item>
+                    <List.Item>{colorizeAffixes()}</List.Item>
                   </>
                 )}
               />
@@ -249,7 +351,6 @@ const Conjugator = () => {
       preformative,
       proclitic
     });
-    console.log(newVerb);
     setVerb(newVerb);
   }, [
     stem,

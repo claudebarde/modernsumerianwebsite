@@ -296,9 +296,9 @@ module.exports = ({
           // "da" / "ta" / "shi" / "ni" always lack non-human person-prefix when preceded by ventive
           ipprefix = "";
           notes.push(
-            `${
+            `"${
               dimensionalPrefixes[prefix]
-            } always lacks non-human person-prefix when preceded by ventive.`
+            }" always lacks non-human person-prefix when preceded by ventive.`
           );
         }
       }
