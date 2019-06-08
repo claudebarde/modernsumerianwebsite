@@ -13,3 +13,16 @@
 .columns {
   padding: 10px;
 }
+
+.cardPicture {
+  width: 50%;
+  float: right;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .cardPicture {
+    width: 150%;
+    float: right;
+  }
+}

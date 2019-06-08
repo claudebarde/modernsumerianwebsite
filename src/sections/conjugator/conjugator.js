@@ -272,7 +272,8 @@ const Conjugator = () => {
           </Col>
           <Col span={6}>
             <img
-              style={{ width: "50%", float: "right" }}
+              //style={{ width: "50%", float: "right" }}
+              className={styles.cardPicture}
               src="images/undraw_artificial_intelligence_upfn.svg"
               alt="conjugator"
             />

@@ -33,12 +33,16 @@ const Dictionary = () => {
             </Title>
           </Col>
           <Col span={6}>
-            <img src="images/undraw_search_2dfv.svg" alt="search" />
+            <img
+              src="images/undraw_search_2dfv.svg"
+              alt="search"
+              className={styles.cardPicture}
+            />
           </Col>
         </Row>
         <hr />
         <Row gutter={24}>
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <label htmlFor="search_sumerian">In Sumerian :</label>
             <br />
             <br />
@@ -49,7 +53,7 @@ const Dictionary = () => {
               enterButton
             />
           </Col>
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <label htmlFor="search_english">In English :</label>
             <br />
             <br />
