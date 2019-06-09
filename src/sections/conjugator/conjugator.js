@@ -16,7 +16,7 @@ import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 
 import styles from "./conjugator.module.scss";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Conjugator = () => {
   const COLORS = {
@@ -256,9 +256,9 @@ const Conjugator = () => {
     return coloredPrefixes
       .filter(el => !!el)
       .concat(
-        <span key="verbchain-stem" style={affixesStyle}>
-          {stem}
-        </span>
+        <Tooltip placement="bottom" title="stem" key="verbchain-stem">
+          <span style={affixesStyle}>{stem}</span>
+        </Tooltip>
       )
       .concat(coloredSuffixes.filter(el => !!el));
   };
@@ -351,6 +351,7 @@ const Conjugator = () => {
       preformative,
       proclitic
     });
+    console.log(newVerb);
     setVerb(newVerb);
   }, [
     stem,

@@ -274,17 +274,17 @@ module.exports = ({
       let ipprefix = initialPersonPrefixes[initialPersonPrefix];
       if (initialPersonPrefix === "secondSingular") {
         // prefix "e" assimilates with previous vowel
-        if (indirectObject.length > 0) {
+        if (indirectObject && indirectObject.length > 0) {
           // in case of indirect object prefix
         } else if (ventive) {
           // in case of ventive prefix
-        } else if (preformative.length > 0) {
+        } else if (preformative && preformative.length > 0) {
           // in case of preformative suffix
           ipprefix = preformative;
           notes.push(
             `Initial personal prefix "e" contracts with preceding vowel and lengthens it.`
           );
-        } else if (proclitic.length > 0) {
+        } else if (proclitic && proclitic.length > 0) {
           // in case of preformative suffix
         }
       } else if (initialPersonPrefix === "thirdSingularInanimate") {
@@ -530,9 +530,17 @@ module.exports = ({
     if (proclitic === "nu") {
       if (VOWELS.includes(conjugatedVerb[0])) {
         // vowel after "nu" assimilates to "u"
-        proclitic = "nu";
+        newProclitic = "nu";
         conjugatedVerb = "u" + conjugatedVerb.slice(1);
-        notes.push(`First vowel assimilates to "u" in "nu".`);
+        // checks if vowel is preformative to update affixes array
+        affixes = affixes.map(item => {
+          if (item.function === "preformative") {
+            item.form = "u";
+          }
+
+          return item;
+        });
+        notes.push(`Vowel after "nu" becomes "u".`);
       } else if (
         !VOWELS.includes(conjugatedVerb[0]) &&
         VOWELS.includes(conjugatedVerb[1]) &&
@@ -554,6 +562,8 @@ module.exports = ({
           `Vowel in proclitic "nu" assimilates to following vowel in /CV/ syllable.`
         );
         notes.push(`Initial "n" in proclitic "nu" becomes "l" before "b".`);
+      } else {
+        newProclitic = "nu";
       }
     }
     // KHA
@@ -564,6 +574,8 @@ module.exports = ({
         notes.push(
           `Initial "i" assimilates to proclitic "kha" which becomes "khe".`
         );
+      } else {
+        newProclitic = "kha";
       }
     }
     // NAN
@@ -583,6 +595,8 @@ module.exports = ({
       ) {
         newProclitic = "nan";
         notes.push(`Proclitic "nan" is found before /CV/.`);
+      } else {
+        newProclitic = "nan";
       }
     }
 

@@ -10,9 +10,29 @@
   background-color: white;
 }
 
+.displayResults {
+  width: 100%;
+}
+
 .cardPicture {
   width: 50%;
   float: right;
+}
+
+.displayWord {
+  width: 200px;
+  text-align: center;
+}
+
+.cuneiformWord {
+  height: 150px;
+  width: 150px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.pagination {
+  text-align: center;
 }
 
 /* Portrait and Landscape */

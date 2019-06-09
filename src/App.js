@@ -3,6 +3,7 @@ import Landing from "./sections/landing/landing";
 import Dictionary from "./sections/dictionary/dictionary";
 import Conjugator from "./sections/conjugator/conjugator";
 import Footer from "./sections/footer/footer";
+
 import "./App.css";
 
 const BGCOLOR = "#ffd591";
