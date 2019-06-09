@@ -4,7 +4,20 @@
   padding: 50px 0px;
 }
 
-.steps {
+.roadmap {
   width: 70%;
   background-color: white;
+}
+
+.cardPicture {
+  width: 50%;
+  float: right;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .cardPicture {
+    width: 150%;
+    float: right;
+  }
 }

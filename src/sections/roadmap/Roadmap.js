@@ -9,8 +9,19 @@ const { Step } = Steps;
 const Roadmap = () => {
   return (
     <div className={`${styles.main} sections`} id="roadmapSection">
-      <Card className={styles.steps}>
-        <Title level={3}>Roadmap</Title>
+      <Card className={styles.roadmap}>
+        <Row>
+          <Col span={18}>
+            <Title level={3}>Roadmap</Title>
+          </Col>
+          <Col span={6}>
+            <img
+              src="images/undraw_map_light_6ttm.svg"
+              alt="roadmap"
+              className={styles.cardPicture}
+            />
+          </Col>
+        </Row>
         <Row>
           <Col span={12} offset={6}>
             <Steps direction="vertical" current={0}>
