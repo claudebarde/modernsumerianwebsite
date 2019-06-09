@@ -351,7 +351,7 @@ const Conjugator = () => {
       preformative,
       proclitic
     });
-    console.log(newVerb);
+    //console.log(newVerb);
     setVerb(newVerb);
   }, [
     stem,

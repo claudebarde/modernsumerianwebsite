@@ -35,6 +35,9 @@ const Dictionary = () => {
 
   const fetchData = async (lang, word) => {
     if (lang && word) {
+      // resets results pagination
+      setOrderedResults(0);
+      // sets values according to language
       let docName, dictionaryIndex, collection;
       if (lang === "sumerian") {
         // sets loading button
@@ -243,9 +246,15 @@ const Dictionary = () => {
             {displayResults.length > 0 ? (
               <div className={styles.displayResults}>
                 <Row gutter={16}>
-                  <Col span={8}>{displayResults[orderedResults]}</Col>
-                  <Col span={8}>{displayResults[orderedResults + 1]}</Col>
-                  <Col span={8}>{displayResults[orderedResults + 2]}</Col>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults]}
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults + 1]}
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults + 2]}
+                  </Col>
                 </Row>
                 <br />
                 <Pagination

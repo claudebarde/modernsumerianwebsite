@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import Landing from "./sections/landing/landing";
-import Dictionary from "./sections/dictionary/dictionary";
-import Conjugator from "./sections/conjugator/conjugator";
-import Footer from "./sections/footer/footer";
+import Landing from "./sections/landing/Landing";
+import Dictionary from "./sections/dictionary/Dictionary";
+import Conjugator from "./sections/conjugator/Conjugator";
+import Footer from "./sections/footer/Footer";
+import Roadmap from "./sections/roadmap/Roadmap";
 
 import "./App.css";
 
@@ -15,19 +16,29 @@ const App = () => {
       "landingSectionMobile"
     );
     const dictionarySection = document.getElementById("dictionarySection");
-    const conjugator = document.getElementById("conjugatorSection");
+    const conjugatorSection = document.getElementById("conjugatorSection");
+    const roadmapSection = document.getElementById("roadmapSection");
 
-    let landingDictPosition, dictConjugatorPosition;
+    let landingDictPosition, dictConjugatorPosition, conjStepsPosition;
     if (landingSection.clientHeight > 0) {
       // computer view
       landingDictPosition = (landingSection.clientHeight / 3) * 2;
       dictConjugatorPosition =
-        landingSection.clientHeight + dictionarySection.clientHeight / 3;
+        landingSection.clientHeight + (dictionarySection.clientHeight / 3) * 2;
+      conjStepsPosition =
+        landingSection.clientHeight +
+        dictionarySection.clientHeight +
+        conjugatorSection.clientHeight / 2;
     } else if (landingSectionMobile.clientHeight) {
       // mobile view
-      landingDictPosition = (landingSectionMobile.clientHeight / 3) * 2;
+      landingDictPosition = (landingSectionMobile.clientHeight / 4) * 3;
       dictConjugatorPosition =
-        landingSectionMobile.clientHeight + dictionarySection.clientHeight / 3;
+        landingSectionMobile.clientHeight +
+        (dictionarySection.clientHeight / 3) * 2;
+      conjStepsPosition =
+        landingSectionMobile.clientHeight +
+        dictionarySection.clientHeight +
+        conjugatorSection.clientHeight / 2;
     }
 
     if (window.scrollY < landingDictPosition) {
@@ -42,11 +53,18 @@ const App = () => {
       // user is on dictionary
       landingSection.style.background = "#ffffff";
       landingSectionMobile.style.background = "#ffffff";
-      conjugator.style.background = "#ffffff";
+      conjugatorSection.style.background = "#ffffff";
       dictionarySection.style.background = BGCOLOR;
-    } else if (window.scrollY > dictConjugatorPosition) {
+    } else if (
+      window.scrollY > dictConjugatorPosition &&
+      window.scrollY < conjStepsPosition
+    ) {
       dictionarySection.style.background = "#ffffff";
-      conjugator.style.background = BGCOLOR;
+      conjugatorSection.style.background = BGCOLOR;
+      roadmapSection.style.background = "#ffffff";
+    } else if (window.scrollY > conjStepsPosition) {
+      conjugatorSection.style.background = "#ffffff";
+      roadmapSection.style.background = BGCOLOR;
     }
   };
 
@@ -60,6 +78,7 @@ const App = () => {
       <Landing />
       <Dictionary />
       <Conjugator />
+      <Roadmap />
       <Footer />
     </>
   );

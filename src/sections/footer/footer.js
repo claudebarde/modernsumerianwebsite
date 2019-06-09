@@ -32,6 +32,15 @@ const Footer = () => {
           </a>
           <Divider type="vertical" />
           <a
+            href="https://www.memrise.com/course/776887/modern-sumerian/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            Lectures
+          </a>
+          <Divider type="vertical" />
+          <a
             href="http://psd.museum.upenn.edu/"
             target="_blank"
             rel="noopener noreferrer"
