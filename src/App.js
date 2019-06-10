@@ -18,6 +18,7 @@ const App = () => {
     const dictionarySection = document.getElementById("dictionarySection");
     const conjugatorSection = document.getElementById("conjugatorSection");
     const roadmapSection = document.getElementById("roadmapSection");
+    const githubLogo = document.getElementById("github-logo");
 
     let landingDictPosition, dictConjugatorPosition, conjStepsPosition;
     if (landingSection.clientHeight > 0) {
@@ -55,6 +56,9 @@ const App = () => {
       landingSectionMobile.style.background = "#ffffff";
       conjugatorSection.style.background = "#ffffff";
       dictionarySection.style.background = BGCOLOR;
+      // github logo
+      githubLogo.style.fill = BGCOLOR;
+      githubLogo.style.color = "#ffffff";
     } else if (
       window.scrollY > dictConjugatorPosition &&
       window.scrollY < conjStepsPosition
@@ -62,9 +66,15 @@ const App = () => {
       dictionarySection.style.background = "#ffffff";
       conjugatorSection.style.background = BGCOLOR;
       roadmapSection.style.background = "#ffffff";
+      // github logo
+      githubLogo.style.fill = "#ffffff";
+      githubLogo.style.color = BGCOLOR;
     } else if (window.scrollY > conjStepsPosition) {
       conjugatorSection.style.background = "#ffffff";
       roadmapSection.style.background = BGCOLOR;
+      // github logo
+      githubLogo.style.fill = BGCOLOR;
+      githubLogo.style.color = "#ffffff";
     }
   };
 

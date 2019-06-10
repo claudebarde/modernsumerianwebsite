@@ -125,6 +125,8 @@ module.exports = ({
               `"e" contracts with a preceding vowel, lengthening that vowel.`
             );
           }
+        } else {
+          personalPrefix = personalPrefixes[subject];
         }
 
         affixes.push({
@@ -160,7 +162,7 @@ module.exports = ({
     } else if (aspect === "imperfective") {
       // adds prefixes and suffixes
       // if verb ends in a vowel
-      let personalPrefix = personalPrefixes[directObject];
+      let personalPrefix = "";
       let personalSuffix = "";
       if (willSuffixVowelContract(stem, personalSuffixes1[subject])) {
         personalSuffix = personalSuffixes1[subject].slice(1);
@@ -174,35 +176,39 @@ module.exports = ({
       }
       // prefix "e" assimilates with previous vowel
 
-      if (directObject === "secondSingular") {
-        // contracts with a preceding vowel, lengthening that vowel
-        if (obliqueObject) {
-          const obliquePrefix = obliqueObjectPrefixes[obliqueObject];
-          personalPrefix = obliquePrefix[obliquePrefix.length - 1];
-        } else if (
-          dimensionalPrefix &&
-          dimensionalPrefix.length > 0 &&
-          dimensionalPrefix[0].prefix
-        ) {
-          const dimPrefix = dimensionalPrefixes[dimensionalPrefix[0].prefix];
-          personalPrefix = dimPrefix[dimPrefix.length - 1];
-        } else if (indirectObject) {
-          const indirectPrefix = indirectObjectPrefixes[indirectObject];
-          personalPrefix = indirectPrefix[indirectPrefix.length - 1];
-        } else if (ventive) {
-          personalPrefix = "u";
-        } else if (preformative) {
-          personalPrefix = preformative;
-        } else if (proclitic) {
-          personalPrefix = proclitic[proclitic.length - 1];
-        } else {
-          personalPrefix = personalPrefixes[directObject];
-        }
+      if (directObject) {
+        personalPrefix = personalPrefixes[directObject];
 
-        if (personalPrefix !== "e") {
-          notes.push(
-            `Personal prefix "e" contracts with preceding vowel and lengthens it.`
-          );
+        if (directObject === "secondSingular") {
+          // contracts with a preceding vowel, lengthening that vowel
+          if (obliqueObject) {
+            const obliquePrefix = obliqueObjectPrefixes[obliqueObject];
+            personalPrefix = obliquePrefix[obliquePrefix.length - 1];
+          } else if (
+            dimensionalPrefix &&
+            dimensionalPrefix.length > 0 &&
+            dimensionalPrefix[0].prefix
+          ) {
+            const dimPrefix = dimensionalPrefixes[dimensionalPrefix[0].prefix];
+            personalPrefix = dimPrefix[dimPrefix.length - 1];
+          } else if (indirectObject) {
+            const indirectPrefix = indirectObjectPrefixes[indirectObject];
+            personalPrefix = indirectPrefix[indirectPrefix.length - 1];
+          } else if (ventive) {
+            personalPrefix = "u";
+          } else if (preformative) {
+            personalPrefix = preformative;
+          } else if (proclitic) {
+            personalPrefix = proclitic[proclitic.length - 1];
+          } else {
+            personalPrefix = personalPrefixes[directObject];
+          }
+
+          if (personalPrefix !== "e") {
+            notes.push(
+              `Personal prefix "e" contracts with preceding vowel and lengthens it.`
+            );
+          }
         }
       }
 
@@ -491,6 +497,7 @@ module.exports = ({
           !VOWELS.includes(conjugatedVerb[0]) &&
           VOWELS.includes(conjugatedVerb[1])
         ) {
+          preformative = "";
           notes.push(
             `Preformative "a" is never found before a prefix that consists of a consonant and a vowel.`
           );
@@ -502,7 +509,7 @@ module.exports = ({
           type: "prefix",
           function: "preformative",
           rawForm: "a",
-          form: "a"
+          form: preformative
         });
       } else if (preformative === "u") {
         if (aspect !== "perfective") {
