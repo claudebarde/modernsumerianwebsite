@@ -210,24 +210,23 @@ module.exports = ({
             );
           }
         }
-      }
-
-      conjugatedVerb = personalPrefix + stem + personalSuffix;
-      // saves affixes
-      affixes.push(
-        {
+        // saves affixes
+        affixes.push({
           type: "prefix",
           function: "transitive direct object",
           rawForm: personalPrefixes[directObject],
           form: personalPrefix
-        },
-        {
-          type: "suffix",
-          function: "transitive subject",
-          rawForm: personalSuffixes2[subject],
-          form: personalSuffix
-        }
-      );
+        });
+      }
+
+      conjugatedVerb = personalPrefix + stem + personalSuffix;
+      // saves affixes
+      affixes.push({
+        type: "suffix",
+        function: "transitive subject",
+        rawForm: personalSuffixes2[subject],
+        form: personalSuffix
+      });
     }
   }
 
@@ -320,15 +319,26 @@ module.exports = ({
           // in case of indirect object prefix
         } else if (ventive) {
           // in case of ventive prefix
+          ipprefix = "u";
         } else if (preformative && preformative.length > 0) {
           // in case of preformative suffix
-          ipprefix = preformative;
-          notes.push(
-            `Initial personal prefix "e" contracts with preceding vowel and lengthens it.`
-          );
+          if (proclitic && !ventive && !indirectObject) {
+            // preformative will change according to preceding proclitic
+            if (proclitic === "nu") {
+              ipprefix = "u";
+            } else if (proclitic === "kha") {
+              ipprefix = "a";
+            }
+          } else {
+            ipprefix = preformative;
+          }
         } else if (proclitic && proclitic.length > 0) {
           // in case of preformative suffix
+          ipprefix = proclitic[proclitic.length - 1];
         }
+        notes.push(
+          `Initial personal prefix "e" contracts with preceding vowel and lengthens it.`
+        );
       } else if (initialPersonPrefix === "thirdSingularInanimate") {
         if (
           ventive &&
@@ -610,19 +620,27 @@ module.exports = ({
       }
     }
     // KHA
-    if (proclitic === "kha") {
+    else if (proclitic === "kha") {
       if (conjugatedVerb[0] === "i") {
         newProclitic = "khe";
         conjugatedVerb = conjugatedVerb.slice(1);
         notes.push(
           `Initial "i" assimilates to proclitic "kha" which becomes "khe".`
         );
+        // modifies preformative entry in array because of "i" being assimilated
+        affixes = affixes.map(entry => {
+          if (entry.function === "preformative" && entry.rawForm === "i") {
+            entry.form = "";
+          }
+
+          return entry;
+        });
       } else {
         newProclitic = "kha";
       }
     }
     // NAN
-    if (proclitic === "nan") {
+    else if (proclitic === "nan") {
       if (
         !VOWELS.includes(conjugatedVerb[0]) &&
         !VOWELS.includes(conjugatedVerb[1])
@@ -642,8 +660,16 @@ module.exports = ({
         newProclitic = "nan";
       }
     }
+    // GA
+    else if (proclitic === "ga") {
+      newProclitic = "ga";
+    }
+    // BARA
+    else if (proclitic === "bara") {
+      newProclitic = "bara";
+    }
 
-    conjugatedVerb = proclitic + conjugatedVerb;
+    conjugatedVerb = newProclitic + conjugatedVerb;
     affixes.push({
       type: "prefix",
       function: "proclitic",

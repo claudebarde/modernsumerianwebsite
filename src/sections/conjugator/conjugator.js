@@ -463,7 +463,7 @@ const Conjugator = () => {
         <Row gutter={24} type="flex" justify="center" align="bottom">
           <Col xs={24} sm={7} className={styles.columns}>
             <p>
-              <Badge color={COLORS.subject} text="Subject:" />
+              <Badge color={COLORS.subject} text="* Subject:" />
             </p>
             <Select
               placeholder="Subject"
