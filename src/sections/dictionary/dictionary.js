@@ -32,6 +32,7 @@ const Dictionary = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [displayResults, setDisplayResults] = useState([]);
   const [orderedResults, setOrderedResults] = useState(0);
+  const [currentDictPage, setCurrentDictPage] = useState(1);
 
   const fetchData = async (lang, word) => {
     if (lang && word) {
@@ -203,7 +204,11 @@ const Dictionary = () => {
             <Input.Search
               id="search_english"
               placeholder="Search word in English"
-              onSearch={value => fetchData("english", value.trim())}
+              onSearch={value => {
+                fetchData("english", value.trim());
+                // resets pagination
+                setCurrentDictPage(1);
+              }}
               enterButton={
                 loadingSearch_en ? (
                   <Icon type="loading" />
@@ -259,14 +264,15 @@ const Dictionary = () => {
                 <br />
                 <Pagination
                   size="small"
-                  defaultCurrent={1}
+                  current={currentDictPage}
                   total={displayResults.length}
                   showTotal={total => `Total ${total} results`}
                   defaultPageSize={3}
                   className={styles.pagination}
-                  onChange={(page, pageSize) =>
-                    setOrderedResults((page - 1) * 3)
-                  }
+                  onChange={(page, pageSize) => {
+                    setOrderedResults((page - 1) * 3);
+                    setCurrentDictPage(page);
+                  }}
                 />
               </div>
             ) : loadingSearch_su || loadingSearch_en ? (

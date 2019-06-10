@@ -95,11 +95,42 @@ module.exports = ({
       let personalSuffix = "";
 
       if (subject) {
-        personalPrefix = personalPrefixes[subject] || "";
+        if (subject === "secondSingular") {
+          // contracts with a preceding vowel, lengthening that vowel
+          if (obliqueObject) {
+            const obliquePrefix = obliqueObjectPrefixes[obliqueObject];
+            personalPrefix = obliquePrefix[obliquePrefix.length - 1];
+          } else if (
+            dimensionalPrefix &&
+            dimensionalPrefix.length > 0 &&
+            dimensionalPrefix[0].prefix
+          ) {
+            const dimPrefix = dimensionalPrefixes[dimensionalPrefix[0].prefix];
+            personalPrefix = dimPrefix[dimPrefix.length - 1];
+          } else if (indirectObject) {
+            const indirectPrefix = indirectObjectPrefixes[indirectObject];
+            personalPrefix = indirectPrefix[indirectPrefix.length - 1];
+          } else if (ventive) {
+            personalPrefix = "u";
+          } else if (preformative) {
+            personalPrefix = preformative;
+          } else if (proclitic) {
+            personalPrefix = proclitic[proclitic.length - 1];
+          } else {
+            personalPrefix = personalPrefixes[subject];
+          }
+
+          if (personalPrefix !== "e") {
+            notes.push(
+              `"e" contracts with a preceding vowel, lengthening that vowel.`
+            );
+          }
+        }
+
         affixes.push({
           type: "prefix",
           function: "transitive subject",
-          rawForm: personalPrefix,
+          rawForm: personalPrefixes[subject] || "",
           form: personalPrefix
         });
       }
@@ -116,6 +147,7 @@ module.exports = ({
           // if verb ends in a consonant
           personalSuffix = personalSuffixes2[directObject] || "";
         }
+
         // saves affixes
         affixes.push({
           type: "suffix",
@@ -140,39 +172,41 @@ module.exports = ({
       } else {
         personalSuffix = personalSuffixes1[subject];
       }
-      let directObjectPrefix = personalPrefixes[directObject];
       // prefix "e" assimilates with previous vowel
+
       if (directObject === "secondSingular") {
-        let prefix = "";
-        if (obliqueObject.length > 0) {
-          // in case of oblique object
-          prefix = obliqueObjectPrefixes[obliqueObject];
-          if (prefix[prefix.length - 1] === "e") {
-            directObjectPrefix = "";
-          } else {
-            directObjectPrefix = prefix[prefix.length - 1];
-          }
-          notes.push(
-            `Personal prefix "e" contracts with preceding vowel and lengthens it.`
-          );
-        } else if (dimensionalPrefix.length > 0) {
-          // in case of dimensional prefix
-        } else if (indirectObject.length > 0) {
-          // in case of indirect object prefix
+        // contracts with a preceding vowel, lengthening that vowel
+        if (obliqueObject) {
+          const obliquePrefix = obliqueObjectPrefixes[obliqueObject];
+          personalPrefix = obliquePrefix[obliquePrefix.length - 1];
+        } else if (
+          dimensionalPrefix &&
+          dimensionalPrefix.length > 0 &&
+          dimensionalPrefix[0].prefix
+        ) {
+          const dimPrefix = dimensionalPrefixes[dimensionalPrefix[0].prefix];
+          personalPrefix = dimPrefix[dimPrefix.length - 1];
+        } else if (indirectObject) {
+          const indirectPrefix = indirectObjectPrefixes[indirectObject];
+          personalPrefix = indirectPrefix[indirectPrefix.length - 1];
         } else if (ventive) {
-          // in case of ventive prefix
-        } else if (preformative.length > 0) {
-          // in case of preformative suffix
-          directObjectPrefix = preformative;
+          personalPrefix = "u";
+        } else if (preformative) {
+          personalPrefix = preformative;
+        } else if (proclitic) {
+          personalPrefix = proclitic[proclitic.length - 1];
+        } else {
+          personalPrefix = personalPrefixes[directObject];
+        }
+
+        if (personalPrefix !== "e") {
           notes.push(
             `Personal prefix "e" contracts with preceding vowel and lengthens it.`
           );
-        } else if (proclitic.length > 0) {
-          // in case of preformative suffix
         }
       }
 
-      conjugatedVerb = directObjectPrefix + stem + personalSuffix;
+      conjugatedVerb = personalPrefix + stem + personalSuffix;
       // saves affixes
       affixes.push(
         {
@@ -209,6 +243,7 @@ module.exports = ({
     // "bi" does not appear with dimensional prefixes and "ba"
     if (
       obliqueObject === "thirdSingularInanimate" &&
+      dimensionalPrefix &&
       dimensionalPrefix[0].prefix.length > 0
     ) {
       notes.push(
@@ -223,6 +258,7 @@ module.exports = ({
       obliqueObject === "thirdSingularInanimate"
     ) {
       if (
+        dimensionalPrefix &&
         dimensionalPrefix[0].prefix &&
         dimensionalPrefixes.hasOwnProperty(dimensionalPrefix[0].prefix)
       ) {
@@ -231,7 +267,7 @@ module.exports = ({
         );
       }
 
-      if (indirectObject.length > 0) {
+      if (indirectObject && indirectObject.length > 0) {
         notes.push(
           `"bi" / "ri" / "nni" are never found with the indirect-object prefixes.`
         );
