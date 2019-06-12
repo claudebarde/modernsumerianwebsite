@@ -23,7 +23,7 @@ const Roadmap = () => {
           </Col>
         </Row>
         <Row>
-          <Col span={12} offset={6}>
+          <Col xs={{ span: 24, offset: 0 }} sm={{ span: 12, offset: 6 }}>
             <Steps direction="vertical" current={0}>
               <Step
                 title="New website"

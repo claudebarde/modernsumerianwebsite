@@ -14,14 +14,14 @@ const Footer = () => {
         align="middle"
         style={{ height: "100%" }}
       >
-        <Col span={8}>
+        <Col xs={11} sm={8}>
           Modern Sumerian
           <br />
           <span style={{ fontSize: "1.5rem" }}>
             {"\u{12174}\u{120A0}\u{12313}\u{12228}\u{12000}"}
           </span>
         </Col>
-        <Col span={8} style={{ textAlign: "right", fontSize: "1rem" }}>
+        <Col xs={11} sm={8} style={{ textAlign: "right", fontSize: "1rem" }}>
           <a
             href="https://www.facebook.com/ModernSumerian/"
             target="_blank"
