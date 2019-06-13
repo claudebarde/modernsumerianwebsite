@@ -4,6 +4,7 @@ import Dictionary from "./sections/dictionary/Dictionary";
 import Conjugator from "./sections/conjugator/Conjugator";
 import Footer from "./sections/footer/Footer";
 import Roadmap from "./sections/roadmap/Roadmap";
+import FlashcardGame from "./sections/flashcardgame/FlashcardGame";
 
 import "./App.css";
 
@@ -88,6 +89,7 @@ const App = () => {
       <Landing />
       <Dictionary />
       <Conjugator />
+      <FlashcardGame />
       <Roadmap />
       <Footer />
     </>

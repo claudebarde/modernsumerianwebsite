@@ -36,3 +36,20 @@
     align-items: center;
   }
 }
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 200px) and (max-device-width: 374px) and (-webkit-min-device-pixel-ratio: 2) {
+  .main {
+    display: none;
+  }
+
+  .mainMobile {
+    height: 100vh;
+    padding: 10px;
+    font-size: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

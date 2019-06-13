@@ -1,0 +1,43 @@
+.main {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0px;
+}
+
+.flashcardGame {
+  width: 70%;
+  background-color: white;
+}
+
+.cardPicture {
+  width: 50%;
+  float: right;
+}
+
+.cardsContainer {
+  text-align: center;
+}
+
+.cuneiform {
+  font-size: 2rem;
+}
+
+.flashcard:hover {
+  -moz-box-shadow: 0 0 3px 3px #888;
+  -webkit-box-shadow: 0 0 3px 3px#888;
+  box-shadow: 0 0 3px 3px #888;
+  cursor: pointer;
+}
+
+.flashcard[disabled] {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .cardPicture {
+    width: 150%;
+    float: right;
+  }
+}
