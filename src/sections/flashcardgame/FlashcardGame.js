@@ -7,7 +7,8 @@ import {
   Skeleton,
   Alert,
   Button,
-  Modal
+  Modal,
+  Select
 } from "antd";
 
 import styles from "./FlashcardGame.module.scss";
@@ -18,6 +19,7 @@ const FlashcardGame = () => {
   const [level, setLevel] = useState(0);
   const [points, setPoints] = useState(0);
   const [rightAnswers, setRightAnswers] = useState(0);
+  const [difficulty, setDifficulty] = useState(0);
   const [game, setGame] = useState([]);
   const [combinaison, setCombinaison] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -201,6 +203,9 @@ const FlashcardGame = () => {
         setIsLoading(false);
         setShowCongrats(false);
       }, 500);
+    } else if (level === 0 && countdown === 0) {
+      // regenerates a game from level 0 after countdown is over
+      setGame(generateCards(initialWord));
     }
   }, [level]);
   // updates countdown and terminate game after time's elapsed
@@ -215,7 +220,7 @@ const FlashcardGame = () => {
       if (countdown === 0) {
         Modal.success({
           title: "Congratulations!",
-          content: `You won with ${points} points.`
+          content: `Your score: ${points} points.`
         });
         setLevel(0);
         setPoints(0);
@@ -253,7 +258,17 @@ const FlashcardGame = () => {
                 {countdown ? (
                   `Countdown: ${countdown}`
                 ) : (
-                  <Button onClick={() => setCountdown(30)}>Start!</Button>
+                  <>
+                    <Select
+                      placeholder="Difficulty"
+                      defaultValue={difficulty.toString()}
+                      onChange={value => setDifficulty(value)}
+                    >
+                      <Select.Option value="0">Easy</Select.Option>
+                      <Select.Option value="1">Hard</Select.Option>
+                    </Select>{" "}
+                    <Button onClick={() => setCountdown(30)}>Start!</Button>
+                  </>
                 )}
               </Title>
             </Col>
@@ -292,7 +307,9 @@ const FlashcardGame = () => {
                         disabled={false}
                       >
                         <p className={styles.cuneiform}>{card.unicode}</p>
-                        <p>{card.sumerian.toUpperCase()}</p>
+                        {difficulty === 0 && (
+                          <p>{card.sumerian.toUpperCase()}</p>
+                        )}
                       </Card>
                     ) : (
                       <Card
