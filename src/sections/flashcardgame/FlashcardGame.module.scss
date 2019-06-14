@@ -22,12 +22,16 @@
   font-size: 2rem;
 }
 
-.flashcard:hover {
+.englishIcon {
+  font-size: 1.4rem;
+}
+
+/*.flashcard:hover {
   -moz-box-shadow: 0 0 3px 3px #888;
   -webkit-box-shadow: 0 0 3px 3px#888;
   box-shadow: 0 0 3px 3px #888;
   cursor: pointer;
-}
+}*/
 
 .flashcard[disabled] {
   pointer-events: none;

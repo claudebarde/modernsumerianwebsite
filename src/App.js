@@ -19,9 +19,15 @@ const App = () => {
     const dictionarySection = document.getElementById("dictionarySection");
     const conjugatorSection = document.getElementById("conjugatorSection");
     const roadmapSection = document.getElementById("roadmapSection");
+    const flashcardGameSection = document.getElementById(
+      "flashcardGameSection"
+    );
     const githubLogo = document.getElementById("github-logo");
 
-    let landingDictPosition, dictConjugatorPosition, conjStepsPosition;
+    let landingDictPosition,
+      dictConjugatorPosition,
+      conjStepsPosition,
+      flashcardGamePosition;
     if (landingSection.clientHeight > 0) {
       // computer view
       landingDictPosition = (landingSection.clientHeight / 3) * 2;
@@ -31,6 +37,11 @@ const App = () => {
         landingSection.clientHeight +
         dictionarySection.clientHeight +
         conjugatorSection.clientHeight / 2;
+      flashcardGamePosition =
+        landingSection.clientHeight +
+        dictionarySection.clientHeight +
+        conjugatorSection.clientHeight +
+        flashcardGameSection.clientHeight / 2;
     } else if (landingSectionMobile.clientHeight) {
       // mobile view
       landingDictPosition = (landingSectionMobile.clientHeight / 4) * 3;
@@ -41,6 +52,11 @@ const App = () => {
         landingSectionMobile.clientHeight +
         dictionarySection.clientHeight +
         conjugatorSection.clientHeight / 2;
+      flashcardGamePosition =
+        landingSectionMobile.clientHeight +
+        dictionarySection.clientHeight +
+        conjugatorSection.clientHeight +
+        flashcardGameSection.clientHeight / 2;
     }
 
     if (window.scrollY < landingDictPosition) {
@@ -64,18 +80,28 @@ const App = () => {
       window.scrollY > dictConjugatorPosition &&
       window.scrollY < conjStepsPosition
     ) {
+      // user is on the conjugator
       dictionarySection.style.background = "#ffffff";
       conjugatorSection.style.background = BGCOLOR;
+      flashcardGameSection.style.background = "#ffffff";
+      // github logo
+      githubLogo.style.fill = "#ffffff";
+      githubLogo.style.color = BGCOLOR;
+    } else if (
+      window.scrollY > conjStepsPosition &&
+      window.scrollY < flashcardGamePosition
+    ) {
+      // user is on the flashcard game
+      flashcardGameSection.style.background = BGCOLOR;
+      conjugatorSection.style.background = "#ffffff";
       roadmapSection.style.background = "#ffffff";
       // github logo
       githubLogo.style.fill = "#ffffff";
       githubLogo.style.color = BGCOLOR;
-    } else if (window.scrollY > conjStepsPosition) {
-      conjugatorSection.style.background = "#ffffff";
+    } else if (window.scrollY > flashcardGamePosition) {
+      // user is on the roadmap
+      flashcardGameSection.style.background = "#ffffff";
       roadmapSection.style.background = BGCOLOR;
-      // github logo
-      githubLogo.style.fill = BGCOLOR;
-      githubLogo.style.color = "#ffffff";
     }
   };
 

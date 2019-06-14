@@ -8,10 +8,14 @@ import {
   Alert,
   Button,
   Modal,
-  Select
+  Select,
+  Icon,
+  Empty
 } from "antd";
 
 import styles from "./FlashcardGame.module.scss";
+
+import WORDS from "./words";
 
 const { Title } = Typography;
 
@@ -26,19 +30,6 @@ const FlashcardGame = () => {
   const [countdown, setCountdown] = useState(undefined);
   const [showCongrats, setShowCongrats] = useState(false);
   const [initialWord, setInitialWord] = useState(undefined);
-
-  const WORDS = [
-    { sumerian: "a", unicode: "\u{12000}", english: "water" },
-    { sumerian: "izi", unicode: "\u{12248}", english: "fire" },
-    { sumerian: "mushen", unicode: "\u{12137}", english: "bird" },
-    { sumerian: "erin", unicode: "\u{1209F}", english: "people" },
-    { sumerian: "inim", unicode: "\u{12157}", english: "word" },
-    { sumerian: "ki", unicode: "\u{121A0}", english: "place" },
-    { sumerian: "an", unicode: "\u{1202D}", english: "sky" },
-    { sumerian: "ĝesh", unicode: "\u{12111}", english: "tree" },
-    { sumerian: "gi", unicode: "\u{12100}", english: "reed" },
-    { sumerian: "ab", unicode: "\u{1200A}", english: "father" }
-  ];
 
   const getRandomInt = (min, max) => {
     /*min = Math.ceil(min);
@@ -135,11 +126,10 @@ const FlashcardGame = () => {
   // checks combinaison
   useEffect(() => {
     // colors selected divs
-    combinaison.forEach(
-      card =>
-        (document.getElementById(`card-${card}`).style.backgroundColor =
-          "#e6f7ff")
-    );
+    combinaison.forEach(card => {
+      const cardID = document.getElementById(`card-${card}`);
+      if (cardID) cardID.style.backgroundColor = "#e6f7ff";
+    });
     if (combinaison.length === 2) {
       // stores element references
       const firstSelection = document.getElementById(`card-${combinaison[0]}`);
@@ -198,6 +188,10 @@ const FlashcardGame = () => {
   // resets card game when new level is reached
   useEffect(() => {
     if (level !== 0 && level <= WORDS.length) {
+      // user gets 5 more seconds every 5 level
+      if (level % 5 === 0) {
+        setCountdown(countdown + 5);
+      }
       setTimeout(() => {
         setGame(generateCards(initialWord));
         setIsLoading(false);
@@ -220,10 +214,21 @@ const FlashcardGame = () => {
       if (countdown === 0) {
         Modal.success({
           title: "Congratulations!",
-          content: `Your score: ${points} points.`
+          content: (
+            <div>
+              <p>
+                <strong>Your score:</strong>
+              </p>
+              <p>{`Difficulty: ${difficulty === 0 ? "easy" : "hard"}`}</p>
+              <p>{`Level: ${level}`}</p>
+              <p>{`${points} ${points < 2 ? "point" : "points"}`}</p>
+            </div>
+          )
         });
-        setLevel(0);
+        setLevel(1);
         setPoints(0);
+        setRightAnswers(0);
+        setCombinaison([]);
       }
       clearInterval(interval);
     }
@@ -246,6 +251,15 @@ const FlashcardGame = () => {
           </Col>
         </Row>
         <div className={styles.cardsContainer}>
+          <br />
+          <br />
+          <Row type="flex" justify="center">
+            <Col span={12}>
+              <Title level={4}>Have fun learning new cuneiforms !</Title>
+            </Col>
+          </Row>
+          <br />
+          <br />
           <Row type="flex" justify="space-around">
             <Col span={6}>
               <Title level={4}>Level {level}</Title>
@@ -266,14 +280,25 @@ const FlashcardGame = () => {
                     >
                       <Select.Option value="0">Easy</Select.Option>
                       <Select.Option value="1">Hard</Select.Option>
-                    </Select>{" "}
-                    <Button onClick={() => setCountdown(30)}>Start!</Button>
+                    </Select>
                   </>
                 )}
               </Title>
             </Col>
           </Row>
-          {!countdown ? null : isLoading ? (
+          {!countdown ? (
+            <Empty
+              image="images/undraw_To_the_stars_qhyy.svg"
+              imageStyle={{
+                height: 70
+              }}
+              description={<span>Start a new game!</span>}
+            >
+              <Button type="primary" onClick={() => setCountdown(40)}>
+                Start
+              </Button>
+            </Empty>
+          ) : isLoading ? (
             showCongrats ? (
               <div style={{ width: "60%", margin: "0 auto", padding: "10px" }}>
                 <Alert message="Congratulations!" type="success" showIcon />
@@ -301,14 +326,20 @@ const FlashcardGame = () => {
                   >
                     {card.hasOwnProperty("sumerian") ? (
                       <Card
+                        size="small"
                         className={styles.flashcard}
                         onClick={() => selectCard(card.sumerian)}
                         id={`card-${card.sumerian}`}
                         disabled={false}
+                        hoverable={true}
                       >
-                        <p className={styles.cuneiform}>{card.unicode}</p>
+                        <span className={styles.cuneiform}>{card.unicode}</span>
                         {difficulty === 0 && (
-                          <p>{card.sumerian.toUpperCase()}</p>
+                          <>
+                            <br />
+                            <br />
+                            <span>{card.sumerian.toUpperCase()}</span>
+                          </>
                         )}
                       </Card>
                     ) : (
@@ -317,8 +348,18 @@ const FlashcardGame = () => {
                         onClick={() => selectCard(card.english)}
                         id={`card-${card.english}`}
                         disabled={false}
+                        hoverable={true}
                       >
-                        <p>{card.english.toUpperCase()}</p>
+                        {difficulty === 0 && (
+                          <>
+                            <span className={styles.englishIcon}>
+                              <Icon type="align-center" />
+                            </span>
+                            <br />
+                            <br />
+                          </>
+                        )}
+                        <span>{card.english.toUpperCase()}</span>
                       </Card>
                     )}
                   </Col>
