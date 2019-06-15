@@ -23,6 +23,7 @@ const FlashcardGame = () => {
   const [level, setLevel] = useState(0);
   const [points, setPoints] = useState(0);
   const [rightAnswers, setRightAnswers] = useState(0);
+  const [wrongAnswers, setWrongAnswers] = useState([]);
   const [difficulty, setDifficulty] = useState(0);
   const [game, setGame] = useState([]);
   const [combinaison, setCombinaison] = useState([]);
@@ -159,6 +160,12 @@ const FlashcardGame = () => {
         secondSelection.style.backgroundColor = "#ffccc7";
         // takes point
         setPoints(points > 0 ? points - 1 : 0);
+        // saves wrong answers
+        const _wrongAnswers = combinaison.map(
+          word =>
+            WORDS.filter(el => el.sumerian === word || el.english === word)[0]
+        );
+        setWrongAnswers([...wrongAnswers, ..._wrongAnswers]);
         setTimeout(() => {
           // resets color
           firstSelection.style.backgroundColor = "#ffffff";
@@ -190,7 +197,7 @@ const FlashcardGame = () => {
     if (level !== 0 && level <= WORDS.length) {
       // user gets 5 more seconds every 5 level
       if (level % 5 === 0) {
-        setCountdown(countdown + 5);
+        setCountdown(countdown + 10);
       }
       setTimeout(() => {
         setGame(generateCards(initialWord));
@@ -212,16 +219,38 @@ const FlashcardGame = () => {
       }, 1000);
     } else {
       if (countdown === 0) {
+        const _wrongAnswers = [...new Set(wrongAnswers)];
         Modal.success({
           title: "Congratulations!",
           content: (
             <div>
-              <p>
-                <strong>Your score:</strong>
-              </p>
-              <p>{`Difficulty: ${difficulty === 0 ? "easy" : "hard"}`}</p>
-              <p>{`Level: ${level}`}</p>
-              <p>{`${points} ${points < 2 ? "point" : "points"}`}</p>
+              <Row style={{ textAlign: "center" }}>
+                <Col span={8}>{`Difficulty: ${
+                  difficulty === 0 ? "easy" : "hard"
+                }`}</Col>
+                <Col span={8}>{`Level: ${level}`}</Col>
+                <Col span={8}>{`${points} ${
+                  points < 2 ? "point" : "points"
+                }`}</Col>
+              </Row>
+              <br />
+              <Card title="Your wrong answers" style={{ textAlign: "center" }}>
+                {_wrongAnswers.map(answer => (
+                  <Card.Grid key={answer.sumerian}>
+                    <span className={styles.cuneiform}>{answer.unicode}</span>
+                    <br />
+                    <br />
+                    <span style={{ whiteSpace: "nowrap" }}>
+                      {answer.sumerian.toUpperCase()}
+                    </span>
+                    <br />
+                    <br />
+                    <span style={{ whiteSpace: "nowrap" }}>
+                      {answer.english}
+                    </span>
+                  </Card.Grid>
+                ))}
+              </Card>
             </div>
           )
         });
@@ -229,6 +258,7 @@ const FlashcardGame = () => {
         setPoints(0);
         setRightAnswers(0);
         setCombinaison([]);
+        setWrongAnswers([]);
       }
       clearInterval(interval);
     }
