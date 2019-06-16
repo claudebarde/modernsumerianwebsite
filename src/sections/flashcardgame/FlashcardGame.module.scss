@@ -26,22 +26,57 @@
   font-size: 1.4rem;
 }
 
-/*.flashcard:hover {
-  -moz-box-shadow: 0 0 3px 3px #888;
-  -webkit-box-shadow: 0 0 3px 3px#888;
-  box-shadow: 0 0 3px 3px #888;
-  cursor: pointer;
-}*/
+.transliteration {
+  white-space: nowrap;
+}
 
 .flashcard[disabled] {
   pointer-events: none;
   opacity: 0.7;
 }
 
+.congratsMessage {
+  width: 60%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
 /* Portrait and Landscape */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+@media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .flashcardGame {
+    width: 95%;
+    background-color: white;
+  }
+
   .cardPicture {
     width: 150%;
     float: right;
+  }
+
+  .title {
+    font-size: 1rem !important;
+  }
+
+  .score {
+    font-size: 0.8rem !important;
+  }
+
+  .cuneiform {
+    font-size: 1.5rem;
+  }
+
+  .englishIcon {
+    font-size: 1rem;
+  }
+
+  .transliteration {
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+
+  .congratsMessage {
+    width: 100%;
+    margin: 0;
+    padding: 2px;
   }
 }

@@ -234,23 +234,28 @@ const FlashcardGame = () => {
                 }`}</Col>
               </Row>
               <br />
-              <Card title="Your wrong answers" style={{ textAlign: "center" }}>
-                {_wrongAnswers.map(answer => (
-                  <Card.Grid key={answer.sumerian}>
-                    <span className={styles.cuneiform}>{answer.unicode}</span>
-                    <br />
-                    <br />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {answer.sumerian.toUpperCase()}
-                    </span>
-                    <br />
-                    <br />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {answer.english}
-                    </span>
-                  </Card.Grid>
-                ))}
-              </Card>
+              {wrongAnswers.length > 0 && (
+                <Card
+                  title="Your wrong answers"
+                  style={{ textAlign: "center" }}
+                >
+                  {_wrongAnswers.map(answer => (
+                    <Card.Grid key={answer.sumerian}>
+                      <span className={styles.cuneiform}>{answer.unicode}</span>
+                      <br />
+                      <br />
+                      <span style={{ whiteSpace: "nowrap" }}>
+                        {answer.sumerian.toUpperCase()}
+                      </span>
+                      <br />
+                      <br />
+                      <span style={{ whiteSpace: "nowrap" }}>
+                        {answer.english}
+                      </span>
+                    </Card.Grid>
+                  ))}
+                </Card>
+              )}
             </div>
           )
         });
@@ -284,21 +289,27 @@ const FlashcardGame = () => {
           <br />
           <br />
           <Row type="flex" justify="center">
-            <Col span={12}>
-              <Title level={4}>Have fun learning new cuneiforms !</Title>
+            <Col span={18}>
+              <Title level={4} className={styles.title}>
+                Have fun learning new cuneiforms !
+              </Title>
             </Col>
           </Row>
           <br />
           <br />
           <Row type="flex" justify="space-around">
-            <Col span={6}>
-              <Title level={4}>Level {level}</Title>
+            <Col xs={12} sm={6}>
+              <Title level={4} className={styles.score}>
+                Level {level}
+              </Title>
             </Col>
-            <Col span={6}>
-              <Title level={4}>Points: {points}</Title>
+            <Col xs={12} sm={6}>
+              <Title level={4} className={styles.score}>
+                Points: {points}
+              </Title>
             </Col>
-            <Col span={6}>
-              <Title level={4}>
+            <Col xs={12} sm={6}>
+              <Title level={4} className={styles.score}>
                 {countdown ? (
                   `Countdown: ${countdown}`
                 ) : (
@@ -307,6 +318,7 @@ const FlashcardGame = () => {
                       placeholder="Difficulty"
                       defaultValue={difficulty.toString()}
                       onChange={value => setDifficulty(value)}
+                      className={styles.selectDifficulty}
                     >
                       <Select.Option value="0">Easy</Select.Option>
                       <Select.Option value="1">Hard</Select.Option>
@@ -330,12 +342,12 @@ const FlashcardGame = () => {
             </Empty>
           ) : isLoading ? (
             showCongrats ? (
-              <div style={{ width: "60%", margin: "0 auto", padding: "10px" }}>
+              <div className={styles.congratsMessage}>
                 <Alert message="Congratulations!" type="success" showIcon />
                 <Skeleton active />
               </div>
             ) : (
-              <div style={{ width: "60%", margin: "0 auto", padding: "10px" }}>
+              <div className={styles.congratsMessage}>
                 <Skeleton active />
               </div>
             )
@@ -351,8 +363,10 @@ const FlashcardGame = () => {
               >
                 {fourCards.map((card, colIndex) => (
                   <Col
-                    span={24 / fourCards.length}
+                    xs={8}
+                    sm={24 / fourCards.length}
                     key={`col-cards-${rowIndex}-${colIndex}`}
+                    style={{ marginBottom: "5px" }}
                   >
                     {card.hasOwnProperty("sumerian") ? (
                       <Card
@@ -368,7 +382,9 @@ const FlashcardGame = () => {
                           <>
                             <br />
                             <br />
-                            <span>{card.sumerian.toUpperCase()}</span>
+                            <span className={styles.transliteration}>
+                              {card.sumerian.toUpperCase()}
+                            </span>
                           </>
                         )}
                       </Card>
@@ -389,7 +405,9 @@ const FlashcardGame = () => {
                             <br />
                           </>
                         )}
-                        <span>{card.english.toUpperCase()}</span>
+                        <span className={styles.transliteration}>
+                          {card.english.toUpperCase()}
+                        </span>
                       </Card>
                     )}
                   </Col>
