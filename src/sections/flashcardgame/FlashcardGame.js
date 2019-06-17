@@ -222,9 +222,10 @@ const FlashcardGame = () => {
         const _wrongAnswers = [...new Set(wrongAnswers)];
         Modal.success({
           title: "Congratulations!",
+          bodyStyle: { margin: "0px" },
           content: (
             <div>
-              <Row style={{ textAlign: "center" }}>
+              <Row style={{ textAlign: "center", marginLeft: "-38px" }}>
                 <Col span={8}>{`Difficulty: ${
                   difficulty === 0 ? "easy" : "hard"
                 }`}</Col>
@@ -237,17 +238,16 @@ const FlashcardGame = () => {
               {wrongAnswers.length > 0 && (
                 <Card
                   title="Your wrong answers"
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "center", marginLeft: "-38px" }}
+                  size="small"
                 >
                   {_wrongAnswers.map(answer => (
                     <Card.Grid key={answer.sumerian}>
                       <span className={styles.cuneiform}>{answer.unicode}</span>
                       <br />
-                      <br />
                       <span style={{ whiteSpace: "nowrap" }}>
                         {answer.sumerian.toUpperCase()}
                       </span>
-                      <br />
                       <br />
                       <span style={{ whiteSpace: "nowrap" }}>
                         {answer.english}
@@ -291,7 +291,7 @@ const FlashcardGame = () => {
           <Row type="flex" justify="center">
             <Col span={18}>
               <Title level={4} className={styles.title}>
-                Have fun learning new cuneiforms !
+                Have fun and learn new cuneiforms !
               </Title>
             </Col>
           </Row>
@@ -363,7 +363,7 @@ const FlashcardGame = () => {
               >
                 {fourCards.map((card, colIndex) => (
                   <Col
-                    xs={8}
+                    xs={fourCards.length === 3 ? 8 : 12}
                     sm={24 / fourCards.length}
                     key={`col-cards-${rowIndex}-${colIndex}`}
                     style={{ marginBottom: "5px" }}
