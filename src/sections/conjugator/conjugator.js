@@ -375,8 +375,7 @@ const Conjugator = () => {
         aria-label="View source on GitHub"
       >
         <svg
-          width="80"
-          height="80"
+          className={styles.githubSVG}
           viewBox="0 0 250 250"
           style={{
             fill: "#ffffff",

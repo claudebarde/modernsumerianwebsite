@@ -20,6 +20,11 @@
   float: right;
 }
 
+.githubSVG {
+  width: 80px;
+  height: 80px;
+}
+
 .githubCorner:hover .octoArm {
   animation: octocat-wave 560ms ease-in-out;
 }
@@ -56,5 +61,10 @@
   .cardPicture {
     width: 150%;
     float: right;
+  }
+
+  .githubSVG {
+    width: 40px;
+    height: 40px;
   }
 }
