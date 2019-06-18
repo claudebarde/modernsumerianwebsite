@@ -17,7 +17,7 @@ import styles from "./FlashcardGame.module.scss";
 
 import WORDS from "./words";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const FlashcardGame = () => {
   const [level, setLevel] = useState(0);
@@ -329,17 +329,35 @@ const FlashcardGame = () => {
             </Col>
           </Row>
           {!countdown ? (
-            <Empty
-              image="images/undraw_To_the_stars_qhyy.svg"
-              imageStyle={{
-                height: 70
-              }}
-              description={<span>Start a new game!</span>}
-            >
-              <Button type="primary" onClick={() => setCountdown(40)}>
-                Start
-              </Button>
-            </Empty>
+            <>
+              <Empty
+                image="images/undraw_To_the_stars_qhyy.svg"
+                imageStyle={{
+                  height: 70
+                }}
+                description={<span>Start a new game!</span>}
+              >
+                <Button type="primary" onClick={() => setCountdown(40)}>
+                  Start
+                </Button>
+              </Empty>
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <Text disabled>
+                  You need to install a cuneiform font to display the
+                  characters.
+                  <br />
+                  The one used for this game is avaible{" "}
+                  <a
+                    href="http://users.teilar.gr/~g1951d/Akkadian.zip"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    here
+                  </a>
+                  .
+                </Text>
+              </div>
+            </>
           ) : isLoading ? (
             showCongrats ? (
               <div className={styles.congratsMessage}>

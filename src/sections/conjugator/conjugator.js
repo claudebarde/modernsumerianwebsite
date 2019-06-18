@@ -16,7 +16,7 @@ import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 
 import styles from "./conjugator.module.scss";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Conjugator = () => {
   const COLORS = {
@@ -266,73 +266,84 @@ const Conjugator = () => {
   const displayConjugatedVerb = () => {
     if (verb) {
       return (
-        <Row gutter={24} type="flex" justify="center">
-          <Col span={8}>
-            {verb.conjugatedVerb ? (
-              <List
-                size="small"
-                header="Verb chain"
-                dataSource={[verb.conjugatedVerb]}
-                renderItem={item => (
-                  <>
-                    <List.Item>
-                      <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                        {item}
-                      </span>
-                    </List.Item>
-                    <List.Item>{colorizeAffixes()}</List.Item>
-                  </>
-                )}
-              />
-            ) : (
-              <List
-                size="small"
-                header="Verb chain"
-                dataSource={["No data"]}
-                renderItem={item => <List.Item>{item}</List.Item>}
-              />
-            )}
-          </Col>
-          <Col span={8}>
-            {verb.affixes && verb.affixes.length > 0 ? (
-              <List
-                size="small"
-                header="Affixes"
-                dataSource={verb.affixes}
-                renderItem={item => (
-                  <List.Item>{`${item.function} => ${item.form ||
-                    "Ø"} (${item.rawForm || "Ø"})`}</List.Item>
-                )}
-              />
-            ) : (
-              <List
-                size="small"
-                header="Affixes"
-                dataSource={["No data"]}
-                renderItem={item => <List.Item>{item}</List.Item>}
-              />
-            )}
-          </Col>
-          <Col span={8}>
-            {verb.notes && verb.notes.length > 0 ? (
-              <List
-                size="small"
-                header="Notes"
-                dataSource={verb.notes}
-                renderItem={item => <List.Item>{`- ${item}`}</List.Item>}
-              />
-            ) : (
-              <List
-                size="small"
-                header="Notes"
-                dataSource={["No notes"]}
-                renderItem={item => <List.Item>{item}</List.Item>}
-              />
-            )}
-          </Col>
-        </Row>
+        <>
+          <Row type="flex" justify="start">
+            <Col span={24}>
+              <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                {`Verb chain: ${verb.conjugatedVerb} `}({colorizeAffixes()})
+              </span>
+            </Col>
+          </Row>
+          <Row gutter={24} type="flex" justify="center">
+            <Col xs={24} sm={12}>
+              {verb.affixes && verb.affixes.length > 0 ? (
+                <List
+                  size="small"
+                  header="Affixes"
+                  dataSource={verb.affixes}
+                  renderItem={item => (
+                    <List.Item>{`${item.function} => ${item.form ||
+                      "Ø"} (${item.rawForm || "Ø"})`}</List.Item>
+                  )}
+                />
+              ) : (
+                <List
+                  size="small"
+                  header="Affixes"
+                  dataSource={["No data"]}
+                  renderItem={item => <List.Item>{item}</List.Item>}
+                />
+              )}
+            </Col>
+            <Col xs={24} sm={12}>
+              {verb.notes && verb.notes.length > 0 ? (
+                <List
+                  size="small"
+                  header="Notes"
+                  dataSource={verb.notes}
+                  renderItem={item => <List.Item>{`- ${item}`}</List.Item>}
+                />
+              ) : (
+                <List
+                  size="small"
+                  header="Notes"
+                  dataSource={["No notes"]}
+                  renderItem={item => <List.Item>{item}</List.Item>}
+                />
+              )}
+            </Col>
+          </Row>
+        </>
       );
     }
+    /*
+    {verb.conjugatedVerb ? (
+                <List
+                  size="small"
+                  header="Verb chain"
+                  dataSource={[verb.conjugatedVerb]}
+                  renderItem={item => (
+                    <>
+                      <List.Item>
+                        <span
+                          style={{ fontWeight: "bold", fontSize: "1.2rem" }}
+                        >
+                          {item}
+                        </span>
+                      </List.Item>
+                      <List.Item>{colorizeAffixes()}</List.Item>
+                    </>
+                  )}
+                />
+              ) : (
+                <List
+                  size="small"
+                  header="Verb chain"
+                  dataSource={["No data"]}
+                  renderItem={item => <List.Item>{item}</List.Item>}
+                />
+              )}
+    */
 
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   };
@@ -417,6 +428,11 @@ const Conjugator = () => {
             />
           </Col>
         </Row>
+        <div style={{ textAlign: "center" }}>
+          <Text disabled>
+            (Verbal stem, transitivity, aspect and subject fields are mandatory)
+          </Text>
+        </div>
         <Row gutter={24} type="flex" justify="center" align="bottom">
           <Col xs={24} sm={7} className={styles.columns}>
             <p>
