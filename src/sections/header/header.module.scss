@@ -1,14 +1,127 @@
-.menu {
+@import "../../config.scss";
+
+/*.menu {
   position: absolute;
   top: 0px;
   right: 10vh;
 
   span {
     display: inline-block;
-    margin: 10px 0px 0px 20px;
+    margin: 10px 5px;
+    padding: 0px 10px;
     font-size: 0.8rem;
     font-weight: bold;
     color: #595959;
     vertical-align: middle;
+    border-bottom: solid 2px $background-color;
+  }
+
+  span:hover {
+    border-bottom: solid 2px #595959;
+  }
+}*/
+
+.menu {
+  position: fixed;
+  top: 0px;
+  right: 10vh;
+  width: 100%;
+  background-color: $background-color;
+  z-index: 999;
+
+  ul {
+    list-style: none;
+    text-align: right;
+    margin: 0;
+
+    li {
+      display: inline-block;
+
+      span {
+        position: relative;
+        display: block;
+        padding: 10px 5px;
+        text-decoration: none;
+        color: #595959;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0 10px;
+      }
+
+      span,
+      span:after,
+      span:before {
+        transition: all 0.5s;
+      }
+
+      span:hover {
+        color: #262626;
+      }
+
+      span:after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 0%;
+        content: ".";
+        color: transparent;
+        background: #262626;
+        height: 2px;
+      }
+
+      span:hover:after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.menuMobile {
+  display: none;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 999;
+
+  ul {
+    list-style: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 5px;
+
+      span {
+        padding: 10px 5px;
+        text-decoration: none;
+        color: #595959;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.menuMobileNav {
+  border-bottom: solid 1px #595959;
+  transition: all 0.5s;
+}
+
+.burger {
+  font-weight: bold;
+  color: #595959;
+  padding: 10px;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .menu {
+    display: none;
+  }
+
+  .menuMobile {
+    display: block;
   }
 }

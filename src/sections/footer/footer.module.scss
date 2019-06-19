@@ -1,6 +1,8 @@
+@import "../../config.scss";
+
 .main {
   height: 10vh;
-  background-color: #fff7e6;
+  background-color: $footer-color;
 }
 
 .footerLink {
