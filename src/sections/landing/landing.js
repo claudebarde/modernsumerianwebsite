@@ -1,6 +1,8 @@
 import React from "react";
 import { Typography, Row, Col } from "antd";
 
+import Roadmap from "../roadmap/Roadmap";
+
 import styles from "./landing.module.scss";
 
 const { Title, Text } = Typography;
@@ -74,6 +76,7 @@ const Landing = () => {
           lot of passion, this is an achievable goal !
         </Text>
       </div>
+      <Roadmap />
     </>
   );
 };

@@ -1,9 +1,11 @@
+@import "../../config.scss";
+
 .main {
-  position: relative;
-  min-height: 60vh;
+  height: 90vh;
   display: flex;
   justify-content: center;
   padding: 50px 0px;
+  background-color: $background-color;
 }
 
 .conjugator {

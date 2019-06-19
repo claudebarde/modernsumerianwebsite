@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
 import Landing from "./sections/landing/Landing";
 import Dictionary from "./sections/dictionary/Dictionary";
 import Conjugator from "./sections/conjugator/Conjugator";
 import Footer from "./sections/footer/Footer";
-import Roadmap from "./sections/roadmap/Roadmap";
+import Header from "./sections/header/Header";
 import FlashcardGame from "./sections/flashcardgame/FlashcardGame";
 
 import "./App.css";
@@ -11,7 +13,7 @@ import "./App.css";
 const BGCOLOR = "#ffd591";
 
 const App = () => {
-  const bgChange = () => {
+  /*const bgChange = () => {
     const landingSection = document.getElementById("landingSection");
     const landingSectionMobile = document.getElementById(
       "landingSectionMobile"
@@ -103,22 +105,22 @@ const App = () => {
       flashcardGameSection.style.background = "#ffffff";
       roadmapSection.style.background = BGCOLOR;
     }
-  };
+  };*/
 
   useEffect(() => {
-    window.addEventListener("scroll", bgChange);
-    bgChange();
+    /*window.addEventListener("scroll", bgChange);
+    bgChange();*/
   }, []);
 
   return (
-    <>
-      <Landing />
-      <Dictionary />
-      <Conjugator />
-      <FlashcardGame />
-      <Roadmap />
+    <Router>
+      <Header />
+      <Route exact path="/" component={Landing} />
+      <Route path="/dictionary" component={Dictionary} />
+      <Route path="/conjugator" component={Conjugator} />
+      <Route path="/flashcardgame" component={FlashcardGame} />
       <Footer />
-    </>
+    </Router>
   );
 };
 
