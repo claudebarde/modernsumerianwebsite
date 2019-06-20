@@ -79,11 +79,7 @@
 }
 
 .menuMobile {
-  display: none;
-  position: fixed;
-  top: 0px;
   width: 100%;
-  z-index: 999;
 
   ul {
     list-style: none;
@@ -105,15 +101,15 @@
   }
 }
 
-.menuMobileNav {
-  border-bottom: solid 1px #595959;
-  transition: all 0.5s;
-}
-
 .burger {
+  position: absolute;
+  top: 0;
+  left: 0;
   font-weight: bold;
   color: #595959;
   padding: 10px;
+  font-size: 1.5rem;
+  z-index: 0;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {

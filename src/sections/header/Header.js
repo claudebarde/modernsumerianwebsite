@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Icon } from "antd";
+import { Icon, Drawer } from "antd";
 
 import styles from "./header.module.scss";
 
@@ -13,7 +13,7 @@ const Header = () => {
         <ul>
           <li>
             <Link to="/">
-              <span style={{ fontSize: "1rem" }}>{"\u{1208D}"}</span>
+              <span style={{ fontSize: "1.2rem" }}>{"\u{1208D}"}</span>
             </Link>
           </li>
           <li>
@@ -31,47 +31,54 @@ const Header = () => {
               <span>Game</span>
             </Link>
           </li>
+          <li>
+            <Link to="/ressources">
+              <span>Ressources</span>
+            </Link>
+          </li>
         </ul>
       </nav>
-      <nav
-        className={styles.menuMobile}
-        style={
-          visibleMenu
-            ? { backgroundColor: "#fff7e6" }
-            : { backgroundColor: "#ffd591" }
-        }
+      <Icon
+        type="menu"
+        className={styles.burger}
+        onClick={() => setVisibleMenu(!visibleMenu)}
+      />
+      <Drawer
+        title="Sections"
+        placement="top"
+        onClose={() => setVisibleMenu(false)}
+        visible={visibleMenu}
       >
-        <Icon
-          type="menu"
-          className={styles.burger}
-          onClick={() => setVisibleMenu(!visibleMenu)}
-        />
-        <ul
-          style={visibleMenu ? { display: "block" } : { display: "none" }}
-          className={styles.menuMobileNav}
-        >
-          <li onClick={() => setVisibleMenu(false)}>
-            <Link to="/">
-              <span style={{ fontSize: "1rem" }}>{"\u{1208D}"}</span>
-            </Link>
-          </li>
-          <li onClick={() => setVisibleMenu(false)}>
-            <Link to="/dictionary">
-              <span>Dictionary</span>
-            </Link>
-          </li>
-          <li onClick={() => setVisibleMenu(false)}>
-            <Link to="/conjugator">
-              <span>Conjugator</span>
-            </Link>
-          </li>
-          <li onClick={() => setVisibleMenu(false)}>
-            <Link to="/flashcardgame">
-              <span>Game</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+        <nav className={styles.menuMobile}>
+          <ul className={styles.menuMobileNav}>
+            <li onClick={() => setVisibleMenu(false)}>
+              <Link to="/">
+                <span style={{ fontSize: "1.2rem" }}>{"\u{1208D}"}</span>
+              </Link>
+            </li>
+            <li onClick={() => setVisibleMenu(false)}>
+              <Link to="/dictionary">
+                <span>Dictionary</span>
+              </Link>
+            </li>
+            <li onClick={() => setVisibleMenu(false)}>
+              <Link to="/conjugator">
+                <span>Conjugator</span>
+              </Link>
+            </li>
+            <li onClick={() => setVisibleMenu(false)}>
+              <Link to="/flashcardgame">
+                <span>Game</span>
+              </Link>
+            </li>
+            <li onClick={() => setVisibleMenu(false)}>
+              <Link to="/ressources">
+                <span>Ressources</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </Drawer>
     </>
   );
 };

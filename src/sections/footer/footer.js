@@ -41,6 +41,15 @@ const Footer = () => {
           </a>
           <Divider type="vertical" />
           <a
+            href="http://users.teilar.gr/~g1951d/Akkadian.zip"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            Cuneiforms
+          </a>
+          <Divider type="vertical" />
+          <a
             href="http://psd.museum.upenn.edu/"
             target="_blank"
             rel="noopener noreferrer"

@@ -15,9 +15,12 @@ import {
 
 import styles from "./FlashcardGame.module.scss";
 
-import WORDS from "./words";
+import WORDS from "../words";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
+
+const GREEN = "#d9f7be";
+const RED = "#ffccc7";
 
 const FlashcardGame = () => {
   const [level, setLevel] = useState(0);
@@ -145,8 +148,8 @@ const FlashcardGame = () => {
       // if right combinaison
       if (findCombinaison.length === 1) {
         // changes color
-        firstSelection.style.backgroundColor = "#d9f7be";
-        secondSelection.style.backgroundColor = "#d9f7be";
+        firstSelection.style.backgroundColor = GREEN;
+        secondSelection.style.backgroundColor = GREEN;
         // disables card
         firstSelection.setAttribute("disabled", true);
         secondSelection.setAttribute("disabled", true);
@@ -156,8 +159,8 @@ const FlashcardGame = () => {
         setRightAnswers(rightAnswers + 1);
       } else {
         // if wrong combinaison
-        firstSelection.style.backgroundColor = "#ffccc7";
-        secondSelection.style.backgroundColor = "#ffccc7";
+        firstSelection.style.backgroundColor = RED;
+        secondSelection.style.backgroundColor = RED;
         // takes point
         setPoints(points > 0 ? points - 1 : 0);
         // saves wrong answers
@@ -271,171 +274,152 @@ const FlashcardGame = () => {
   }, [countdown]);
 
   return (
-    <div className={`${styles.main} sections`} id="flashcardGameSection">
-      <Card className={styles.flashcardGame}>
-        <Row>
+    <Card className={styles.flashcardGame}>
+      <Row>
+        <Col span={18}>
+          <Title level={3}>Flashcard Game</Title>
+        </Col>
+        <Col span={6}>
+          <img
+            src="images/undraw_old_day_6x25.svg"
+            alt="flashcard"
+            className={styles.cardPicture}
+          />
+        </Col>
+      </Row>
+      <div className={styles.cardsContainer}>
+        <br />
+        <br />
+        <Row type="flex" justify="center">
           <Col span={18}>
-            <Title level={3}>Flashcard Game</Title>
-          </Col>
-          <Col span={6}>
-            <img
-              src="images/undraw_old_day_6x25.svg"
-              alt="flashcard"
-              className={styles.cardPicture}
-            />
+            <Title level={4} className={styles.title}>
+              Have fun and learn new cuneiforms !
+            </Title>
           </Col>
         </Row>
-        <div className={styles.cardsContainer}>
-          <br />
-          <br />
-          <Row type="flex" justify="center">
-            <Col span={18}>
-              <Title level={4} className={styles.title}>
-                Have fun and learn new cuneiforms !
-              </Title>
-            </Col>
-          </Row>
-          <br />
-          <br />
-          <Row type="flex" justify="space-around">
-            <Col xs={12} sm={6}>
-              <Title level={4} className={styles.score}>
-                Level {level}
-              </Title>
-            </Col>
-            <Col xs={12} sm={6}>
-              <Title level={4} className={styles.score}>
-                Points: {points}
-              </Title>
-            </Col>
-            <Col xs={12} sm={6}>
-              <Title level={4} className={styles.score}>
-                {countdown ? (
-                  `Countdown: ${countdown}`
-                ) : (
-                  <>
-                    <Select
-                      placeholder="Difficulty"
-                      defaultValue={difficulty.toString()}
-                      onChange={value => setDifficulty(value)}
-                      className={styles.selectDifficulty}
-                    >
-                      <Select.Option value="0">Easy</Select.Option>
-                      <Select.Option value="1">Hard</Select.Option>
-                    </Select>
-                  </>
-                )}
-              </Title>
-            </Col>
-          </Row>
-          {!countdown ? (
-            <>
-              <Empty
-                image="images/undraw_To_the_stars_qhyy.svg"
-                imageStyle={{
-                  height: 70
-                }}
-                description={<span>Start a new game!</span>}
-              >
-                <Button type="primary" onClick={() => setCountdown(40)}>
-                  Start
-                </Button>
-              </Empty>
-              <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <Text disabled>
-                  You need to install a cuneiform font to display the
-                  characters.
-                  <br />
-                  The one used for this game is avaible{" "}
-                  <a
-                    href="http://users.teilar.gr/~g1951d/Akkadian.zip"
-                    target="_blank"
-                    rel="noopener noreferrer"
+        <br />
+        <br />
+        <Row type="flex" justify="space-around">
+          <Col xs={12} sm={6}>
+            <Title level={4} className={styles.score}>
+              Level {level}
+            </Title>
+          </Col>
+          <Col xs={12} sm={6}>
+            <Title level={4} className={styles.score}>
+              Points: {points}
+            </Title>
+          </Col>
+          <Col xs={12} sm={6}>
+            <Title level={4} className={styles.score}>
+              {countdown ? (
+                `Countdown: ${countdown}`
+              ) : (
+                <>
+                  <Select
+                    placeholder="Difficulty"
+                    defaultValue={difficulty.toString()}
+                    onChange={value => setDifficulty(value)}
                   >
-                    here
-                  </a>
-                  .
-                </Text>
-              </div>
-            </>
-          ) : isLoading ? (
-            showCongrats ? (
-              <div className={styles.congratsMessage}>
-                <Alert message="Congratulations!" type="success" showIcon />
-                <Skeleton active />
-              </div>
-            ) : (
-              <div className={styles.congratsMessage}>
-                <Skeleton active />
-              </div>
-            )
+                    <Select.Option value="0">Easy</Select.Option>
+                    <Select.Option value="1">Hard</Select.Option>
+                  </Select>
+                </>
+              )}
+            </Title>
+          </Col>
+        </Row>
+        {!countdown ? (
+          <>
+            <Empty
+              image="images/undraw_To_the_stars_qhyy.svg"
+              imageStyle={{
+                height: 70
+              }}
+              description={<span>Start a new game!</span>}
+            >
+              <Button type="primary" onClick={() => setCountdown(40)}>
+                Start
+              </Button>
+            </Empty>
+          </>
+        ) : isLoading ? (
+          showCongrats ? (
+            <div className={styles.congratsMessage}>
+              <Alert message="Congratulations!" type="success" showIcon />
+              <Skeleton active />
+            </div>
           ) : (
-            game.map((fourCards, rowIndex) => (
-              <Row
-                key={`row-cards-${rowIndex}`}
-                gutter={14}
-                style={{ marginTop: "10px" }}
-                type="flex"
-                justify="space-around"
-                align="middle"
-              >
-                {fourCards.map((card, colIndex) => (
-                  <Col
-                    xs={fourCards.length === 3 ? 8 : 12}
-                    sm={24 / fourCards.length}
-                    key={`col-cards-${rowIndex}-${colIndex}`}
-                    style={{ marginBottom: "5px" }}
-                  >
-                    {card.hasOwnProperty("sumerian") ? (
-                      <Card
-                        size="small"
-                        className={styles.flashcard}
-                        onClick={() => selectCard(card.sumerian)}
-                        id={`card-${card.sumerian}`}
-                        disabled={false}
-                        hoverable={true}
-                      >
-                        <span className={styles.cuneiform}>{card.unicode}</span>
-                        {difficulty === 0 && (
-                          <>
-                            <br />
-                            <br />
-                            <span className={styles.transliteration}>
-                              {card.sumerian.toUpperCase()}
-                            </span>
-                          </>
-                        )}
-                      </Card>
-                    ) : (
-                      <Card
-                        className={styles.flashcard}
-                        onClick={() => selectCard(card.english)}
-                        id={`card-${card.english}`}
-                        disabled={false}
-                        hoverable={true}
-                      >
-                        {difficulty === 0 && (
-                          <>
-                            <span className={styles.englishIcon}>
-                              <Icon type="align-center" />
-                            </span>
-                            <br />
-                            <br />
-                          </>
-                        )}
-                        <span className={styles.transliteration}>
-                          {card.english.toUpperCase()}
-                        </span>
-                      </Card>
-                    )}
-                  </Col>
-                ))}
-              </Row>
-            ))
-          )}
-        </div>
-      </Card>
-    </div>
+            <div className={styles.congratsMessage}>
+              <Skeleton active />
+            </div>
+          )
+        ) : (
+          game.map((fourCards, rowIndex) => (
+            <Row
+              key={`row-cards-${rowIndex}`}
+              gutter={14}
+              style={{ marginTop: "10px" }}
+              type="flex"
+              justify="space-around"
+              align="middle"
+            >
+              {fourCards.map((card, colIndex) => (
+                <Col
+                  xs={fourCards.length === 3 ? 8 : 12}
+                  sm={24 / fourCards.length}
+                  key={`col-cards-${rowIndex}-${colIndex}`}
+                  style={{ marginBottom: "5px" }}
+                >
+                  {card.hasOwnProperty("sumerian") ? (
+                    <Card
+                      size="small"
+                      className={styles.flashcard}
+                      onClick={() => selectCard(card.sumerian)}
+                      id={`card-${card.sumerian}`}
+                      disabled={false}
+                      hoverable={true}
+                    >
+                      <span className={styles.cuneiform}>{card.unicode}</span>
+                      {difficulty === 0 && (
+                        <>
+                          <br />
+                          <br />
+                          <span className={styles.transliteration}>
+                            {card.sumerian.toUpperCase()}
+                          </span>
+                        </>
+                      )}
+                    </Card>
+                  ) : (
+                    <Card
+                      className={styles.flashcard}
+                      onClick={() => selectCard(card.english)}
+                      id={`card-${card.english}`}
+                      disabled={false}
+                      hoverable={true}
+                    >
+                      {difficulty === 0 && (
+                        <>
+                          <span className={styles.englishIcon}>
+                            <Icon type="align-center" />
+                          </span>
+                          <br />
+                          <br />
+                        </>
+                      )}
+                      <span className={styles.transliteration}>
+                        {card.english.toUpperCase()}
+                      </span>
+                    </Card>
+                  )}
+                </Col>
+              ))}
+            </Row>
+          ))
+        )}
+      </div>
+    </Card>
   );
 };
 

@@ -1,16 +1,9 @@
-@import "../../config.scss";
-
-.main {
-  min-height: 90vh;
-  display: flex;
-  justify-content: center;
-  padding: 50px 0px;
-  background-color: $background-color;
-}
+@import "../../../config.scss";
 
 .flashcardGame {
   width: 70%;
   background-color: white;
+  margin-bottom: 20px;
 }
 
 .cardPicture {

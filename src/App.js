@@ -6,11 +6,11 @@ import Dictionary from "./sections/dictionary/Dictionary";
 import Conjugator from "./sections/conjugator/Conjugator";
 import Footer from "./sections/footer/Footer";
 import Header from "./sections/header/Header";
-import FlashcardGame from "./sections/flashcardgame/FlashcardGame";
+import Games from "./sections/games/Games";
 
 import "./App.css";
 
-const BGCOLOR = "#ffd591";
+//const BGCOLOR = "#ffd591";
 
 const App = () => {
   /*const bgChange = () => {
@@ -118,7 +118,7 @@ const App = () => {
       <Route exact path="/" component={Landing} />
       <Route path="/dictionary" component={Dictionary} />
       <Route path="/conjugator" component={Conjugator} />
-      <Route path="/flashcardgame" component={FlashcardGame} />
+      <Route path="/flashcardgame" component={Games} />
       <Footer />
     </Router>
   );

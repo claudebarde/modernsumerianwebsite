@@ -389,7 +389,7 @@ const Conjugator = () => {
           className={styles.githubSVG}
           viewBox="0 0 250 250"
           style={{
-            fill: "#ffffff",
+            fill: "#fff7e6",
             color: "#ffd591",
             position: "absolute",
             top: "0",
