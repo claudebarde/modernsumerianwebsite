@@ -221,7 +221,7 @@ const Quiz = () => {
                 setSumerianWords(data);
                 setRightAnswers(0);
                 setWrongAnswers(0);
-                setSumerianWords([]);
+                setSumerianWords(WORDS.map(word => word.sumerian));
                 setCardWord(undefined);
               }}
             >
