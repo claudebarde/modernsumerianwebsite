@@ -15,7 +15,7 @@ const Games = () => {
           <div>
             You need to install a cuneiform font to display the characters.
             <br />
-            The one used for these games is avaible{" "}
+            The one used for these games is available{" "}
             <a
               href="http://users.teilar.gr/~g1951d/Akkadian.zip"
               target="_blank"

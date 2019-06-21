@@ -7,6 +7,7 @@ import Conjugator from "./sections/conjugator/Conjugator";
 import Footer from "./sections/footer/Footer";
 import Header from "./sections/header/Header";
 import Games from "./sections/games/Games";
+import Resources from "./sections/resources/Resources";
 import ScrollToTop from "./ScrollToTop";
 import NoMatchPage from "./sections/nomatchpage/NoMatchPage";
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/dictionary" component={Dictionary} />
         <Route path="/conjugator" component={Conjugator} />
         <Route path="/games" component={Games} />
+        <Route path="/resources" component={Resources} />
         <Route component={NoMatchPage} />
       </Switch>
       <Footer />
