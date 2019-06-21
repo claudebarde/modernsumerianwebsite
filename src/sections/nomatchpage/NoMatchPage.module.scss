@@ -22,3 +22,20 @@
     margin: 0px 10px;
   }
 }
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 300px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .main {
+    img {
+      width: 80%;
+    }
+  }
+
+  .cuneiforms {
+    font-size: 1.5rem;
+
+    span {
+      margin: 0px 10px;
+    }
+  }
+}

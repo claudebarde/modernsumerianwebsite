@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Landing from "./sections/landing/Landing";
 import Dictionary from "./sections/dictionary/Dictionary";
@@ -17,11 +17,13 @@ const App = () => {
     <Router>
       <ScrollToTop />
       <Header />
-      <Route exact path="/" component={Landing} />
-      <Route path="/dictionary" component={Dictionary} />
-      <Route path="/conjugator" component={Conjugator} />
-      <Route path="/games" component={Games} />
-      <Route component={NoMatchPage} />
+      <Switch>
+        <Route exact path="/" component={Landing} />
+        <Route path="/dictionary" component={Dictionary} />
+        <Route path="/conjugator" component={Conjugator} />
+        <Route path="/games" component={Games} />
+        <Route component={NoMatchPage} />
+      </Switch>
       <Footer />
     </Router>
   );

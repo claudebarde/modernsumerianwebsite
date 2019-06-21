@@ -10,6 +10,7 @@ const Games = () => {
   return (
     <div className={`${styles.main} sections`} id="gameSection">
       <Alert
+        className={styles.fontAlert}
         message={
           <div>
             You need to install a cuneiform font to display the characters.
@@ -28,6 +29,7 @@ const Games = () => {
         type="info"
         showIcon
         closable
+        banner
       />
       <br />
       <FlashcardGame />
