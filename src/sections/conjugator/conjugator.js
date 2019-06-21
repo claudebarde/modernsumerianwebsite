@@ -384,6 +384,7 @@ const Conjugator = () => {
         rel="noopener noreferrer"
         className={styles.githubCorner}
         aria-label="View source on GitHub"
+        style={{ zIndex: "999" }}
       >
         <svg
           className={styles.githubSVG}

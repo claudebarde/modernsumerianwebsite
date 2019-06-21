@@ -27,6 +27,7 @@ const Games = () => {
         }
         type="info"
         showIcon
+        closable
       />
       <br />
       <FlashcardGame />

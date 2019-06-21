@@ -1,0 +1,24 @@
+@import "../../config.scss";
+
+.main {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0px;
+  background-color: $background-color;
+  text-align: center;
+
+  img {
+    width: 40%;
+    margin-bottom: 30px;
+  }
+}
+
+.cuneiforms {
+  font-size: 2.3rem;
+
+  span {
+    margin: 0px 10px;
+  }
+}

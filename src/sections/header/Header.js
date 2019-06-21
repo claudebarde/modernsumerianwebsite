@@ -27,8 +27,8 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="/flashcardgame">
-              <span>Game</span>
+            <Link to="/games">
+              <span>Games</span>
             </Link>
           </li>
           <li>
@@ -68,7 +68,7 @@ const Header = () => {
             </li>
             <li onClick={() => setVisibleMenu(false)}>
               <Link to="/flashcardgame">
-                <span>Game</span>
+                <span>Games</span>
               </Link>
             </li>
             <li onClick={() => setVisibleMenu(false)}>
