@@ -25,3 +25,12 @@ yarn-error.log*
 /src/config.js
 
 .vscode
+
+# firebase
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
+storage.rules
+/.firebase
+/functions

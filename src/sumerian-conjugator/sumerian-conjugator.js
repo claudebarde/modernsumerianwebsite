@@ -317,6 +317,12 @@ module.exports = ({
         // prefix "e" assimilates with previous vowel
         if (indirectObject && indirectObject.length > 0) {
           // in case of indirect object prefix
+          const indirectPrefix = indirectObjectPrefixes[indirectObject];
+          if (indirectPrefix[indirectPrefix.length - 1] === "a") {
+            ipprefix = "a";
+          } else {
+            ipprefix = "";
+          }
         } else if (ventive) {
           // in case of ventive prefix
           ipprefix = "u";

@@ -1,0 +1,17 @@
+@import "../../config.scss";
+
+.main {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0px;
+  background-color: $background-color;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .fontAlert {
+    margin: 0px 10px;
+  }
+}
