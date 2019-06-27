@@ -17,7 +17,8 @@ const CONSONANTS = [
   "gh"
 ];
 
-const SYLLABARY = {
+export const SYLLABARY = {
+  A: "\u{12000}",
   AB: "\u{1200A}",
   AD: "\u{1201C}",
   AG: "none",
@@ -42,6 +43,7 @@ const SYLLABARY = {
   DE: ["\u{1207A}", "comment", `switched "du" for "de"`],
   DI: "\u{12072}",
   DU: ["\u{12195}", "comment", `switched "de" for "du"`],
+  E: "\u{1208A}",
   EB: "none",
   ED: "none",
   EG: "\u{1208A}",
@@ -70,6 +72,7 @@ const SYLLABARY = {
   HE: "none",
   HI: "\u{1212D}",
   HU: "\u{12137}",
+  I: "\u{1213F}",
   IB: "\u{12141}",
   ID: ["\u{121C9}", "creation"],
   IG: "\u{12145}",
@@ -122,6 +125,7 @@ const SYLLABARY = {
   TE: "\u{122FC}",
   TI: "\u{122FE}",
   TU: ["\u{12305}", "simplification", []],
+  U: "\u{1230B}",
   UB: "\u{12312}",
   UD: "\u{12313}",
   UG: "\u{1228C}",

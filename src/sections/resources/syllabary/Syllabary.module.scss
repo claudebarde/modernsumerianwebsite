@@ -1,3 +1,5 @@
+@import "../../../config.scss";
+
 .syllabary {
   width: 70%;
   background-color: white;
@@ -5,10 +7,6 @@
 }
 
 .phonetic {
-}
-
-.cuneiform {
-  font-size: 1.5rem;
 }
 
 .consonantCell {

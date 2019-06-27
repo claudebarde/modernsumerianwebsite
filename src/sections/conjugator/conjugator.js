@@ -13,6 +13,7 @@ import {
   Tooltip
 } from "antd";
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
+import { SYLLABARY } from "../resources/syllabary/syllabaryData";
 
 import styles from "./conjugator.module.scss";
 
@@ -270,7 +271,17 @@ const Conjugator = () => {
           <Row type="flex" justify="start">
             <Col span={24}>
               <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                {`Verb chain: ${verb.conjugatedVerb} `}({colorizeAffixes()})
+                <span>{`Verb chain: ${verb.conjugatedVerb} `}</span>
+                <span>({colorizeAffixes()})</span>
+                <span
+                  className={styles.cuneiform}
+                  style={{ marginLeft: "20px" }}
+                >
+                  {writeCuneiforms(
+                    { prefixes: verb.syllables, suffixes: [] },
+                    "\u{122E7}"
+                  )}
+                </span>
               </span>
             </Col>
           </Row>
@@ -316,36 +327,34 @@ const Conjugator = () => {
         </>
       );
     }
-    /*
-    {verb.conjugatedVerb ? (
-                <List
-                  size="small"
-                  header="Verb chain"
-                  dataSource={[verb.conjugatedVerb]}
-                  renderItem={item => (
-                    <>
-                      <List.Item>
-                        <span
-                          style={{ fontWeight: "bold", fontSize: "1.2rem" }}
-                        >
-                          {item}
-                        </span>
-                      </List.Item>
-                      <List.Item>{colorizeAffixes()}</List.Item>
-                    </>
-                  )}
-                />
-              ) : (
-                <List
-                  size="small"
-                  header="Verb chain"
-                  dataSource={["No data"]}
-                  renderItem={item => <List.Item>{item}</List.Item>}
-                />
-              )}
-    */
 
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  };
+
+  const writeCuneiforms = (affixes, stem) => {
+    const { prefixes, suffixes } = affixes;
+    const VOWELS = ["a", "e", "i", "u"];
+    let verb = stem;
+    // we reverse the prefixes list so we can start building from the stem to the first prefix
+    prefixes.reverse().forEach(syllable => {
+      let result = "";
+      // excludes single consonants
+      if (VOWELS.includes(syllable) || syllable.length === 2) {
+        let _syllable = SYLLABARY[syllable.toUpperCase()];
+        if (_syllable === "none") {
+          result = "Ø";
+        } else if (Array.isArray(_syllable)) {
+          result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+        } else {
+          result = _syllable;
+        }
+      } else if (syllable.length === 3) {
+        console.log("3 phoneme syllable");
+      }
+      verb = result + verb;
+    });
+
+    return verb;
   };
 
   useEffect(() => {
