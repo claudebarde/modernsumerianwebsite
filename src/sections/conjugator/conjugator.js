@@ -32,9 +32,18 @@ const Conjugator = () => {
     ventive: "#36cfc9"
   };
 
+  const defaultVerbs = [
+    { value: "shum", text: "\u{122E7} (shum)", cuneiform: "\u{122E7}" },
+    { value: "naĝ", text: "\u{12158} (naĝ)", cuneiform: "\u{12158}" },
+    { value: "ak", text: "\u{1201D} (ak)", cuneiform: "\u{1201D}" },
+    { value: "gu", text: "\u{12165} (gu)", cuneiform: "\u{12165}" },
+    { value: "ĝen", text: "\u{1207A} (ĝen)", cuneiform: "\u{1207A}" }
+  ];
+
   const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
 
   const [stem, setStem] = useState("");
+  const [cuneiformVerb, setCuneiformVerb] = useState(undefined);
   const [transitive, setTransitive] = useState(undefined);
   const [aspect, setAspect] = useState(undefined);
   const [persons, setPersons] = useState({
@@ -270,19 +279,23 @@ const Conjugator = () => {
         <>
           <Row type="flex" justify="start">
             <Col span={24}>
-              <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                <span>{`Verb chain: ${verb.conjugatedVerb} `}</span>
-                <span>({colorizeAffixes()})</span>
-                <span
-                  className={styles.cuneiform}
-                  style={{ marginLeft: "20px" }}
-                >
+              <Row style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                <Col xs={24} sm={8}>{`Verb chain: ${
+                  verb.conjugatedVerb
+                } `}</Col>
+                <Col xs={24} sm={8}>
+                  ({colorizeAffixes()})
+                </Col>
+                <Col className={styles.cuneiform} xs={24} sm={8}>
                   {writeCuneiforms(
-                    { prefixes: verb.syllables, suffixes: [] },
-                    "\u{122E7}"
+                    {
+                      prefixes: verb.syllables.prefixes,
+                      suffixes: verb.syllables.suffixes
+                    },
+                    cuneiformVerb
                   )}
-                </span>
-              </span>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row gutter={24} type="flex" justify="center">
@@ -331,10 +344,10 @@ const Conjugator = () => {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   };
 
-  const writeCuneiforms = (affixes, stem) => {
+  const writeCuneiforms = (affixes, cuneiformVerb) => {
     const { prefixes, suffixes } = affixes;
     const VOWELS = ["a", "e", "i", "u"];
-    let verb = stem;
+    let cuneiforms = cuneiformVerb;
     // we reverse the prefixes list so we can start building from the stem to the first prefix
     prefixes.reverse().forEach(syllable => {
       let result = "";
@@ -348,13 +361,58 @@ const Conjugator = () => {
         } else {
           result = _syllable;
         }
-      } else if (syllable.length === 3) {
-        console.log("3 phoneme syllable");
+      } else if (syllable.length === 3 || syllable.length === 4) {
+        const a =
+          SYLLABARY[syllable.slice(0, syllable.length - 1).toUpperCase()];
+        const b = SYLLABARY[syllable.slice(-2).toUpperCase()];
+        // first part of syllable
+        if (a === "none") {
+          result = "Ø";
+        } else if (Array.isArray(a)) {
+          result = a[0] === "none" ? "Ø" : a[0];
+        } else {
+          result = a;
+        }
+        // second part of syllable
+        if (b === "none") {
+          result += "Ø";
+        } else if (Array.isArray(b)) {
+          result += b[0] === "none" ? "Ø" : b[0];
+        } else {
+          result += b;
+        }
+      } else {
+        result = "Ø";
       }
-      verb = result + verb;
+      cuneiforms = result + cuneiforms;
     });
+    // suffixes
+    let result;
+    if (suffixes.length === 2) {
+      const _syllable = SYLLABARY[suffixes.toUpperCase()];
+      if (_syllable === "none") {
+        result = "Ø";
+      } else if (Array.isArray(_syllable)) {
+        result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+      } else {
+        result = _syllable;
+      }
+      cuneiforms = cuneiforms + result;
+    } else if (suffixes === "n" && VOWELS.includes(stem[stem.length - 1])) {
+      // suffix "n" after a vowel ending verb
+      const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
+      const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
+      if (_syllable === "none") {
+        result = "Ø";
+      } else if (Array.isArray(_syllable)) {
+        result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+      } else {
+        result = _syllable;
+      }
+      cuneiforms = cuneiforms + result;
+    }
 
-    return verb;
+    return cuneiforms;
   };
 
   useEffect(() => {
@@ -448,11 +506,31 @@ const Conjugator = () => {
             <p>
               <span style={{ color: "red" }}>*</span> Verbal stem:
             </p>
-            <Input
+            {/*<Input
               placeholder="Verbal stem"
               value={stem}
               onChange={event => setStem(event.target.value)}
-            />
+            />*/}
+            <Select
+              showSearch
+              style={{ width: "100%" }}
+              placeholder="Verbal stem"
+              value={stem}
+              onChange={value => {
+                console.log(value);
+                setStem(value);
+                defaultVerbs.forEach(
+                  verb =>
+                    verb.value === value && setCuneiformVerb(verb.cuneiform)
+                );
+              }}
+            >
+              {defaultVerbs.map(verb => (
+                <Select.Option key={verb.value} value={verb.value}>
+                  {verb.text}
+                </Select.Option>
+              ))}
+            </Select>
           </Col>
           <Col xs={24} sm={7} className={styles.columns}>
             <p>
@@ -632,7 +710,7 @@ const Conjugator = () => {
               value={proclitic}
               allowClear={true}
             >
-              <Select.Option value="kha">KHA</Select.Option>
+              <Select.Option value="ha">HA</Select.Option>
               <Select.Option value="nu">NU</Select.Option>
               <Select.Option value="nan">NAN</Select.Option>
               <Select.Option value="ga">GA</Select.Option>

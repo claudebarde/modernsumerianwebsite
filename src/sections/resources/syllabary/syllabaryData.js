@@ -134,13 +134,13 @@ export const SYLLABARY = {
   UH: "none",
   UL: "\u{1230C}",
   UM: "\u{1231D}",
-  UN: "none",
-  UP: "none",
-  UR: "none",
+  UN: ["\u{120A1}", "creation", "e6128"],
+  UP: ["\u{121E5}", "creation", "e5878"],
+  UR: "\u{12328}",
   US: "none",
-  USH: "none",
+  USH: ["\u{12351}", "comment", "e6258"],
   UT: "none",
-  UZ: "none",
+  UZ: ["\u{1235A}", "creation", "e6357"],
   UĜ: "\u{12326}",
   ZA: "\u{1235D}",
   ZE: "none",
@@ -149,7 +149,7 @@ export const SYLLABARY = {
   ĜA: "\u{120B7}",
   ĜE: "none",
   ĜI: "none",
-  ĜU: "none"
+  ĜU: ["\u{12128}", "creation", "e2244"]
 };
 
 export const syllabaryData = CONSONANTS.map((consonant, index) => {
