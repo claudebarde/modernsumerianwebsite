@@ -12,6 +12,8 @@ import {
   List,
   Tooltip
 } from "antd";
+import TextTransition from "react-text-transition";
+
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 import { SYLLABARY } from "../resources/syllabary/syllabaryData";
 
@@ -287,13 +289,15 @@ const Conjugator = () => {
                   ({colorizeAffixes()})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
-                  {writeCuneiforms(
-                    {
-                      prefixes: verb.syllables.prefixes,
-                      suffixes: verb.syllables.suffixes
-                    },
-                    cuneiformVerb
-                  )}
+                  <TextTransition
+                    text={writeCuneiforms(
+                      {
+                        prefixes: verb.syllables.prefixes,
+                        suffixes: verb.syllables.suffixes
+                      },
+                      cuneiformVerb
+                    )}
+                  />
                 </Col>
               </Row>
             </Col>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Table, Row, Col, Tooltip, Icon, Modal } from "antd";
+import { Card, Table, Row, Col, Tooltip, Icon, Modal, Badge } from "antd";
 
 import styles from "./Syllabary.module.scss";
 
@@ -138,6 +138,15 @@ const Syllabary = () => {
         columns={columns}
         pagination={false}
         title={() => "Sumerian syllabary"}
+        footer={() => (
+          <div>
+            <Badge color="#1890ff" text="Comment" />
+            <br />
+            <Badge color="#fa541c" text="New cuneiform" />
+            <br />
+            <Badge color="#52c41a" text="Cuneiform suggestion" />
+          </div>
+        )}
       />
     </Card>
   );

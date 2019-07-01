@@ -1,10 +1,28 @@
 @import "../../config.scss";
 
 .main {
-  height: 10vh;
+  min-height: 10vh;
   background-color: $footer-color;
+  padding: 10px 5px;
 }
 
 .footerLink {
-  color: #1890ff;
+  //color: #1890ff;
+  color: inherit;
+}
+
+.footerTitle {
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footerCol {
+  text-align: left;
+  padding: 10px;
+}
+
+.cryptoAddress {
+  word-break: break-all;
 }
