@@ -26,3 +26,8 @@
 .cryptoAddress {
   word-break: break-all;
 }
+
+.footerCuneiform {
+  @extend .cuneiform;
+  margin-right: 10px;
+}

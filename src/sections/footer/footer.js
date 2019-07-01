@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col, List, Avatar, Typography } from "antd";
 
+import { SYLLABARY } from "../resources/syllabary/syllabaryData";
+
 import styles from "./footer.module.scss";
 
 const { Text, Paragraph } = Typography;
@@ -82,7 +84,21 @@ const Footer = () => {
               }
               dataSource={[
                 {
-                  title: "Buy me a coffe!",
+                  title: (
+                    <div>
+                      <span className={styles.footerCuneiform}>
+                        {`\u{1225A}${SYLLABARY["A"]}${SYLLABARY["SHI"]}${
+                          SYLLABARY["IB"]
+                        }`}
+                      </span>{" "}
+                      <span className={styles.footerCuneiform}>
+                        {`${SYLLABARY["GA"]}${SYLLABARY["HU"]}${
+                          SYLLABARY["A"]
+                        } !`}
+                      </span>
+                      Buy me a coffee!
+                    </div>
+                  ),
                   description: (
                     <a
                       href="https://www.buymeacoffee.com/8jJNf1zyp"
