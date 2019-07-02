@@ -501,7 +501,7 @@ module.exports = ({
         ) {
           preformative = "";
           notes.push(
-            `Preformative "i" is never found before a prefix that consists of a consonant and a vowel.`
+            `Preformative "i" is never found before a syllable that consists of a consonant and a vowel.`
           );
         } else {
           conjugatedVerb = "i" + conjugatedVerb;

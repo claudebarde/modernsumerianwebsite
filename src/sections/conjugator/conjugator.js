@@ -35,11 +35,11 @@ const Conjugator = () => {
   };
 
   const defaultVerbs = [
-    { value: "shum", text: "\u{122E7} (shum)", cuneiform: "\u{122E7}" },
-    { value: "naĝ", text: "\u{12158} (naĝ)", cuneiform: "\u{12158}" },
     { value: "ak", text: "\u{1201D} (ak)", cuneiform: "\u{1201D}" },
     { value: "gu", text: "\u{12165} (gu)", cuneiform: "\u{12165}" },
-    { value: "ĝen", text: "\u{1207A} (ĝen)", cuneiform: "\u{1207A}" }
+    { value: "ĝen", text: "\u{1207A} (ĝen)", cuneiform: "\u{1207A}" },
+    { value: "naĝ", text: "\u{12158} (naĝ)", cuneiform: "\u{12158}" },
+    { value: "shum", text: "\u{122E7} (shum)", cuneiform: "\u{122E7}" }
   ];
 
   const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
@@ -289,15 +289,17 @@ const Conjugator = () => {
                   ({colorizeAffixes()})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
-                  <TextTransition
-                    text={writeCuneiforms(
-                      {
-                        prefixes: verb.syllables.prefixes,
-                        suffixes: verb.syllables.suffixes
-                      },
-                      cuneiformVerb
-                    )}
-                  />
+                  {cuneiformVerb && (
+                    <TextTransition
+                      text={writeCuneiforms(
+                        {
+                          prefixes: verb.syllables.prefixes,
+                          suffixes: verb.syllables.suffixes
+                        },
+                        cuneiformVerb
+                      )}
+                    />
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -386,7 +388,22 @@ const Conjugator = () => {
           result += b;
         }
       } else {
-        result = "Ø";
+        if (
+          !VOWELS.includes(syllable) &&
+          prefixes.length === 1 &&
+          VOWELS.includes(stem[0])
+        ) {
+          // consonant single prefix before vowel initial verb
+          const _syllable =
+            SYLLABARY[syllable.toUpperCase() + stem[0].toUpperCase()];
+          if (_syllable) {
+            result = _syllable;
+          } else {
+            result = "Ø";
+          }
+        } else {
+          result = "Ø";
+        }
       }
       cuneiforms = result + cuneiforms;
     });
@@ -515,14 +532,15 @@ const Conjugator = () => {
               value={stem}
               onChange={event => setStem(event.target.value)}
             />*/}
-            <Select
+            {/* <Select
               showSearch
               style={{ width: "100%" }}
               placeholder="Verbal stem"
               value={stem}
+              notFoundContent="no verb found"
               onChange={value => {
-                console.log(value);
                 setStem(value);
+                // sets the cuneiform value for the stem
                 defaultVerbs.forEach(
                   verb =>
                     verb.value === value && setCuneiformVerb(verb.cuneiform)
@@ -534,7 +552,49 @@ const Conjugator = () => {
                   {verb.text}
                 </Select.Option>
               ))}
-            </Select>
+            </Select>*/}
+            <Input.Group compact>
+              <Input
+                style={{ width: "50%" }}
+                placeholder="Verb Stem"
+                value={stem}
+                onChange={event => {
+                  const value = event.target.value;
+                  setStem(value);
+                  // sets the cuneiform value for the stem
+                  const matchingVerb = defaultVerbs.filter(
+                    verb => verb.value === value
+                  );
+                  if (matchingVerb.length > 0) {
+                    setCuneiformVerb(matchingVerb[0].cuneiform);
+                  } else {
+                    setCuneiformVerb(undefined);
+                  }
+                }}
+              />
+              <Select
+                value={
+                  defaultVerbs.filter(verb => verb.value === stem).length > 0
+                    ? stem
+                    : "suggestions"
+                }
+                style={{ width: "50%" }}
+                onChange={value => {
+                  setStem(value);
+                  // sets the cuneiform value for the stem
+                  defaultVerbs.forEach(
+                    verb =>
+                      verb.value === value && setCuneiformVerb(verb.cuneiform)
+                  );
+                }}
+              >
+                {defaultVerbs.map(verb => (
+                  <Select.Option key={verb.value} value={verb.value}>
+                    {verb.text}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Input.Group>
           </Col>
           <Col xs={24} sm={7} className={styles.columns}>
             <p>

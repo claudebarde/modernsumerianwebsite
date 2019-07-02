@@ -13,6 +13,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "react-text-loop": "^2.0.2",
     "react-text-transition": "^0.1.8"
   },
   "scripts": {

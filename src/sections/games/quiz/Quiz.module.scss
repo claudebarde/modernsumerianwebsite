@@ -1,5 +1,7 @@
+@import "../../../config.scss";
+
 .quiz {
-  width: 70%;
+  width: $card-width;
   background-color: white;
   margin-bottom: 20px;
 }
