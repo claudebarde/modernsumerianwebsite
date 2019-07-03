@@ -73,13 +73,13 @@ const Header = () => {
               </Link>
             </li>
             <li onClick={() => setVisibleMenu(false)}>
-              <Link to="/flashcardgame">
+              <Link to="/games">
                 <span>Games</span>
               </Link>
             </li>
             <li onClick={() => setVisibleMenu(false)}>
-              <Link to="/ressources">
-                <span>Ressources</span>
+              <Link to="/resources">
+                <span>Resources</span>
               </Link>
             </li>
             <li onClick={() => setVisibleMenu(false)}>
