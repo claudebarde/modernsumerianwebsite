@@ -184,3 +184,34 @@ export const syllabaryData = CONSONANTS.map((consonant, index) => {
     ]
   };
 });
+
+export const syllabaryDataMobile = CONSONANTS.map((consonant, index) => {
+  consonant = consonant.toUpperCase();
+
+  return {
+    a: [
+      `${consonant}A`,
+      SYLLABARY[`${consonant}A`],
+      `A${consonant}`,
+      SYLLABARY[`A${consonant}`]
+    ],
+    e: [
+      `${consonant}E`,
+      SYLLABARY[`${consonant}E`],
+      `E${consonant}`,
+      SYLLABARY[`E${consonant}`]
+    ],
+    i: [
+      `${consonant}I`,
+      SYLLABARY[`${consonant}I`],
+      `I${consonant}`,
+      SYLLABARY[`I${consonant}`]
+    ],
+    u: [
+      `${consonant}U`,
+      SYLLABARY[`${consonant}U`],
+      `U${consonant}`,
+      SYLLABARY[`U${consonant}`]
+    ]
+  };
+});

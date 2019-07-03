@@ -24,7 +24,7 @@ const Roadmap = () => {
         </Row>
         <Row>
           <Col xs={{ span: 24, offset: 0 }} sm={{ span: 12, offset: 6 }}>
-            <Steps direction="vertical" current={0}>
+            <Steps direction="vertical" current={1}>
               <Step
                 title="New website"
                 description="Further tests must be run on the new dictionary and the new verb conjugator."
@@ -34,12 +34,12 @@ const Roadmap = () => {
                 description="New section with the syllabary used for Modern Sumerian."
               />
               <Step
-                title="Unicode Cuneiforms"
-                description="Addition of Unicode cuneiforms in dictionary (that will probably take a while)."
-              />
-              <Step
                 title="Verb Conjugator with Cuneiforms"
                 description="Rendition of verb chains in cuneiforms."
+              />
+              <Step
+                title="Unicode Cuneiforms"
+                description="Addition of Unicode cuneiforms in dictionary (that will probably take a while)."
               />
               <Step
                 title="Modern Sumerian Lectures"
