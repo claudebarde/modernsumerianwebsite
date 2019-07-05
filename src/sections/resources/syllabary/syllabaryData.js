@@ -45,7 +45,7 @@ export const SYLLABARY = {
   DU: ["\u{12195}", "comment", `switched "de" for "du"`],
   E: "\u{1208A}",
   EB: "none",
-  ED: "none",
+  ED: ["none", "proposal", "\u{12001}"],
   EG: "\u{1208A}",
   EGH: "none",
   EK: "none",

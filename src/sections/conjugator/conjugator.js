@@ -16,6 +16,7 @@ import TextTransition from "react-text-transition";
 
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 import { SYLLABARY } from "../resources/syllabary/syllabaryData";
+import defaultVerbs from "./defaultVerbs";
 
 import styles from "./conjugator.module.scss";
 
@@ -33,14 +34,6 @@ const Conjugator = () => {
     proclitic: "#ffa940",
     ventive: "#36cfc9"
   };
-
-  const defaultVerbs = [
-    { value: "ak", text: "\u{1201D} (ak)", cuneiform: "\u{1201D}" },
-    { value: "gu", text: "\u{12165} (gu)", cuneiform: "\u{12165}" },
-    { value: "ĝen", text: "\u{1207A} (ĝen)", cuneiform: "\u{1207A}" },
-    { value: "naĝ", text: "\u{12158} (naĝ)", cuneiform: "\u{12158}" },
-    { value: "shum", text: "\u{122E7} (shum)", cuneiform: "\u{122E7}" }
-  ];
 
   const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
 

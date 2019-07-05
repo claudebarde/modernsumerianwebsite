@@ -53,7 +53,7 @@ const Header = () => {
         placement="top"
         onClose={() => setVisibleMenu(false)}
         visible={visibleMenu}
-        height="40%"
+        height="45%"
       >
         <nav className={styles.menuMobile}>
           <ul className={styles.menuMobileNav}>
