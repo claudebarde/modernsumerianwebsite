@@ -16,9 +16,14 @@ import TextTransition from "react-text-transition";
 
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
 import { SYLLABARY } from "../resources/syllabary/syllabaryData";
-import defaultVerbs from "./defaultVerbs";
+//import defaultVerbs from "./defaultVerbs";
 
 import styles from "./conjugator.module.scss";
+
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/firestore");
+const db = firebase.firestore();
 
 const { Title, Text } = Typography;
 
@@ -51,6 +56,7 @@ const Conjugator = () => {
   const [initialPersonPrefix, setInitialPersonPrefix] = useState(undefined);
   const [preformative, setPreformative] = useState(undefined);
   const [proclitic, setProclitic] = useState(undefined);
+  const [defaultVerbs, setDefaultVerbs] = useState([]);
   const [ventive, setVentive] = useState(false);
   const [verb, setVerb] = useState(undefined);
 
@@ -457,6 +463,38 @@ const Conjugator = () => {
     ventive
   ]);
 
+  useEffect(() => {
+    (async () => {
+      // checks if default verbs have not been downloaded in previous session
+      if (window.sessionStorage) {
+        const verbsStorage = window.sessionStorage.getItem("defaultVerbs");
+        if (verbsStorage) {
+          setDefaultVerbs(JSON.parse(verbsStorage));
+        } else {
+          // fetches default verbs for conjugator on load
+          const _defaultVerbs = [];
+          const results = await db.collection("sumerian_verbs").get();
+          results.forEach(result => _defaultVerbs.push(result.data()));
+          _defaultVerbs.sort((a, b) => (a.value > b.value ? 1 : -1));
+          setDefaultVerbs(_defaultVerbs);
+          // sets session storage
+          window.sessionStorage.setItem(
+            "defaultVerbs",
+            JSON.stringify(_defaultVerbs)
+          );
+        }
+      } else {
+        // fetches default verbs for conjugator on load
+        const _defaultVerbs = [];
+        const results = await db.collection("sumerian_verbs").get();
+        results.forEach(result => _defaultVerbs.push(result.data()));
+        setDefaultVerbs(
+          _defaultVerbs.sort((a, b) => (a.value > b.value ? 1 : -1))
+        );
+      }
+    })();
+  }, []);
+
   return (
     <div className={`${styles.main} sections`} id="conjugatorSection">
       <a
@@ -583,7 +621,7 @@ const Conjugator = () => {
               >
                 {defaultVerbs.map(verb => (
                   <Select.Option key={verb.value} value={verb.value}>
-                    {verb.text}
+                    {`${verb.cuneiform} (${verb.value})`}
                   </Select.Option>
                 ))}
               </Select>
