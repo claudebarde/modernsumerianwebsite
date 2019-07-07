@@ -14,7 +14,7 @@ import {
 import TextTransition from "react-text-transition";
 
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
-import writeCuneiforms from "./writeCuneiforms";
+import writeCuneiforms from "../../sumerian-conjugator/writeCuneiforms";
 import { colorizeAffixes, COLORS } from "./colorizeAffixes";
 //import defaultVerbs from "./defaultVerbs";
 
@@ -95,22 +95,7 @@ const Conjugator = () => {
                   ({colorizeAffixes(verb)})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
-                  {cuneiformVerb && (
-                    <TextTransition
-                      text={writeCuneiforms({
-                        affixes: {
-                          prefixes: verb.syllables.prefixes,
-                          suffixes: verb.syllables.suffixes
-                        },
-                        cuneiformVerb,
-                        reduplicated,
-                        aspect,
-                        verbID,
-                        imperfectiveForm,
-                        stem: verb.stem
-                      })}
-                    />
-                  )}
+                  {cuneiformVerb && <TextTransition text={verb.cuneiforms} />}
                 </Col>
               </Row>
             </Col>
@@ -163,6 +148,7 @@ const Conjugator = () => {
 
   useEffect(() => {
     const newVerb = conjugator({
+      verbID,
       stem,
       aspect,
       transitive: transitive === "transitive" ? true : false,
@@ -180,6 +166,7 @@ const Conjugator = () => {
     //console.log(newVerb);
     setVerb(newVerb);
   }, [
+    verbID,
     stem,
     transitive,
     aspect,
@@ -288,38 +275,12 @@ const Conjugator = () => {
             <p>
               <span style={{ color: "red" }}>*</span> Verbal stem:
             </p>
-            {/*<Input
-              placeholder="Verbal stem"
-              value={stem}
-              onChange={event => setStem(event.target.value)}
-            />*/}
-            {/* <Select
-              showSearch
-              style={{ width: "100%" }}
-              placeholder="Verbal stem"
-              value={stem}
-              notFoundContent="no verb found"
-              onChange={value => {
-                setStem(value);
-                // sets the cuneiform value for the stem
-                defaultVerbs.forEach(
-                  verb =>
-                    verb.value === value && setCuneiformVerb(verb.cuneiform)
-                );
-              }}
-            >
-              {defaultVerbs.map(verb => (
-                <Select.Option key={verb.value} value={verb.value}>
-                  {verb.text}
-                </Select.Option>
-              ))}
-            </Select>*/}
             <Input.Group compact>
               <Input
                 style={{ width: "50%" }}
                 placeholder="Verb Stem"
                 value={stem}
-                onChange={event => {
+                /*onChange={event => {
                   const value = event.target.value;
                   setStem(value);
                   // sets the cuneiform value for the stem
@@ -333,7 +294,7 @@ const Conjugator = () => {
                     setCuneiformVerb(undefined);
                     setImperfectiveForm(undefined);
                   }
-                }}
+                }}*/
               />
               <Select
                 value={

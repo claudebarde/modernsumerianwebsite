@@ -17,8 +17,10 @@ const {
 const {
   indirectObjectPrefixes
 } = require("./personalPrefixesAndSuffixes/indirectObjectPrefixes");
-
+// imports syllable parser
 const syllableParser = require("./syllableParser");
+// imports cuneiform writer
+const writeCuneiforms = require("./writeCuneiforms");
 
 const VOWELS = ["a", "e", "i", "u"];
 
@@ -54,6 +56,7 @@ const reduplicateStem = (stem, aspect) => {
 };
 
 module.exports = ({
+  verbID,
   stem,
   aspect,
   transitive,
@@ -354,6 +357,9 @@ module.exports = ({
           } else {
             ipprefix = "";
           }
+        } else if (middleMarker) {
+          // in case of ventive prefix
+          ipprefix = "a";
         } else if (ventive) {
           // in case of ventive prefix
           ipprefix = "u";
@@ -770,6 +776,14 @@ module.exports = ({
   const syllables = syllableParser(conjugatedVerb, stem);
   // removes dash for reduplicated stems
   conjugatedVerb = conjugatedVerb.replace("-", "");
+  // writes verb in cuneiforms
+  const cuneiforms = writeCuneiforms({
+    affixes: syllables,
+    reduplicated,
+    aspect,
+    verbID,
+    stem
+  });
 
-  return { conjugatedVerb, stem, affixes, notes, syllables };
+  return { conjugatedVerb, stem, affixes, notes, syllables, cuneiforms };
 };
