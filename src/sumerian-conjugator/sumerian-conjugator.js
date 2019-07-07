@@ -87,8 +87,6 @@ module.exports = ({
 
   // reduplicates verbal stem
   if (reduplicated && aspect) stem = reduplicateStem(stem, aspect);
-  // handles middle marker
-  if (middleMarker) indirectObject = "thirdSingularInanimate";
 
   if (transitive !== true) {
     if (!willSuffixVowelContract(stem, personalSuffixes2[subject])) {
@@ -413,6 +411,24 @@ module.exports = ({
   }
 
   /*
+        MIDDLE MARKER
+  */
+  let middleMarkerPrefix = "ba";
+  if (middleMarker) {
+    // cannot occur with thrid person singular inanimate indirect object
+    if (
+      indirectObject === "thirdSingularInanimate" ||
+      indirectObject === "thirdPluralInanimate"
+    ) {
+      indirectObject = undefined;
+    }
+    // "ba" assimilates with ventive to "mma"
+    if (ventive) {
+      middleMarkerPrefix = "ma";
+    }
+  }
+
+  /*
         INDIRECT OBJECT PREFIXES
   */
   if (indirectObject && indirectObject.length > 0) {
@@ -433,6 +449,21 @@ module.exports = ({
   }
 
   /*
+    MIDDLE MARKER OCCURS BETWEEH INDIRECT OBJECT AND VENTIVE
+    BUT INFLUENCES INDIRECT OBJECT FORM
+  */
+  if (middleMarker) {
+    conjugatedVerb = middleMarkerPrefix + conjugatedVerb;
+    // saves affixes
+    affixes.push({
+      type: "prefix",
+      function: "middle marker",
+      rawForm: "ba",
+      form: middleMarkerPrefix
+    });
+  }
+
+  /*
         VENTIVE
   */
   if (ventive) {
@@ -446,6 +477,7 @@ module.exports = ({
       indirectObject !== "thirdPersonInanimate" &&
       dimensionalPrefix[0].prefix !== "in" &&
       obliqueObject !== "secondSingular" &&
+      !middleMarker &&
       (proclitic || preformative)
     ) {
       ventivePrefix = "m";
@@ -463,6 +495,20 @@ module.exports = ({
       // "ba" assimilates with ventive to "mma"
       ventivePrefix = "m";
       notes.push(`"ba" assimilates with ventive to "mma".`);
+    } else if (middleMarker) {
+      // "ba" assimilates with ventive to "mma"
+      ventivePrefix = "m";
+      affixes = affixes.map(item => {
+        if (item.function === "middle marker") {
+          item.form = "ma";
+        }
+
+        return item;
+      });
+      notes.push(
+        `Ventive prefix contracts to "m" before /CV/ cluster.`,
+        `"ba" assimilates with ventive to "mma".`
+      );
     }
     conjugatedVerb = ventivePrefix + conjugatedVerb;
     //saves affixes

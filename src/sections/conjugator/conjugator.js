@@ -9,13 +9,13 @@ import {
   Input,
   Select,
   Badge,
-  List,
-  Tooltip
+  List
 } from "antd";
 import TextTransition from "react-text-transition";
 
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
-import { SYLLABARY } from "../resources/syllabary/syllabaryData";
+import writeCuneiforms from "./writeCuneiforms";
+import { colorizeAffixes, COLORS } from "./colorizeAffixes";
 //import defaultVerbs from "./defaultVerbs";
 
 import styles from "./conjugator.module.scss";
@@ -28,22 +28,6 @@ const db = firebase.firestore();
 const { Title, Text } = Typography;
 
 const Conjugator = () => {
-  const COLORS = {
-    subject: "#597ef7",
-    directObject: "#73d13d",
-    indirectObject: "#ff7a45",
-    obliqueObject: "#9254de",
-    dimensionalPrefix: "#f759ab",
-    initialPersonPrefix: "#ffd6e7",
-    preformative: "#ff4d4f",
-    proclitic: "#ffa940",
-    ventive: "#36cfc9",
-    middleMarker: "#ff7a45",
-    reduplicated: "#b7eb8f"
-  };
-
-  const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
-
   const [stem, setStem] = useState("");
   const [verbID, setVerbID] = useState(null);
   const [cuneiformVerb, setCuneiformVerb] = useState(undefined);
@@ -97,193 +81,6 @@ const Conjugator = () => {
     </Select.Option>
   ];
 
-  const colorizeAffixes = () => {
-    let coloredPrefixes = [].fill("", 0, 9);
-    let coloredSuffixes = [].fill("", 0, 2);
-    // we loop through the affixes in order
-    verb.affixes.forEach(item => {
-      if (item.type === "prefix") {
-        switch (item.function) {
-          case "proclitic":
-            coloredPrefixes[0] = (
-              <Tooltip
-                placement="bottom"
-                title="proclitic"
-                key="verbchain-proclitic"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.proclitic }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "preformative":
-            coloredPrefixes[1] = (
-              <Tooltip
-                placement="bottom"
-                title="preformative"
-                key="verbchain-preformative"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.preformative }}>
-                  {item.form || "Ø"}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "ventive":
-            coloredPrefixes[2] = (
-              <Tooltip
-                placement="bottom"
-                title="ventive"
-                key="verbchain-ventive"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.ventive }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "indirect object":
-            coloredPrefixes[3] = (
-              <Tooltip
-                placement="bottom"
-                title="indirect object"
-                key="verbchain-indirectObject"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.indirectObject }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "initial person prefix":
-            coloredPrefixes[4] = (
-              <Tooltip
-                placement="bottom"
-                title="initial person prefix"
-                key="verbchain-initialPersonPrefix"
-              >
-                <span
-                  style={{ ...affixesStyle, color: COLORS.initialPersonPrefix }}
-                >
-                  {item.form || "Ø"}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "dimensional prefix":
-            coloredPrefixes[5] = (
-              <Tooltip
-                placement="bottom"
-                title="dimensional prefix"
-                key="verbchain-dimensionalPrefix"
-              >
-                <span
-                  style={{ ...affixesStyle, color: COLORS.dimensionalPrefix }}
-                >
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "oblique object":
-            coloredPrefixes[6] = (
-              <Tooltip
-                placement="bottom"
-                title="oblique object"
-                key="verbchain-obliqueObject"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.obliqueObject }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "transitive direct object":
-            coloredPrefixes[7] = (
-              <Tooltip
-                placement="bottom"
-                title="direct object"
-                key="verbchain-directObject"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.directObject }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          case "transitive subject":
-            coloredPrefixes[8] = (
-              <Tooltip
-                placement="bottom"
-                title="subject"
-                key="verbchain-subject"
-              >
-                <span style={{ ...affixesStyle, color: COLORS.subject }}>
-                  {item.form}
-                </span>
-                <span style={affixesStyle}>-</span>
-              </Tooltip>
-            );
-            break;
-          default:
-            break;
-        }
-      } else if (item.type === "suffix") {
-        switch (item.function) {
-          case "intransitive subject":
-          case "transitive subject":
-            coloredSuffixes[0] = (
-              <Tooltip
-                placement="bottom"
-                title="subject"
-                key="verbchain-subject"
-              >
-                <span style={affixesStyle}>-</span>
-                <span style={{ ...affixesStyle, color: COLORS.subject }}>
-                  {item.form}
-                </span>
-              </Tooltip>
-            );
-            break;
-          case "transitive direct object":
-            coloredSuffixes[1] = (
-              <Tooltip
-                placement="bottom"
-                title="direct object"
-                key="verbchain-directObject"
-              >
-                <span style={affixesStyle}>-</span>
-                <span style={{ ...affixesStyle, color: COLORS.directObject }}>
-                  {item.form || "Ø"}
-                </span>
-              </Tooltip>
-            );
-            break;
-          default:
-            break;
-        }
-      }
-    });
-
-    return coloredPrefixes
-      .filter(el => !!el)
-      .concat(
-        <Tooltip placement="bottom" title="stem" key="verbchain-stem">
-          <span style={affixesStyle}>{verb.stem}</span>
-        </Tooltip>
-      )
-      .concat(coloredSuffixes.filter(el => !!el));
-  };
-
   const displayConjugatedVerb = () => {
     if (verb) {
       return (
@@ -295,18 +92,23 @@ const Conjugator = () => {
                   verb.conjugatedVerb
                 } `}</Col>
                 <Col xs={24} sm={8}>
-                  ({colorizeAffixes()})
+                  ({colorizeAffixes(verb)})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
                   {cuneiformVerb && (
                     <TextTransition
-                      text={writeCuneiforms(
-                        {
+                      text={writeCuneiforms({
+                        affixes: {
                           prefixes: verb.syllables.prefixes,
                           suffixes: verb.syllables.suffixes
                         },
-                        cuneiformVerb
-                      )}
+                        cuneiformVerb,
+                        reduplicated,
+                        aspect,
+                        verbID,
+                        imperfectiveForm,
+                        stem: verb.stem
+                      })}
                     />
                   )}
                 </Col>
@@ -357,109 +159,6 @@ const Conjugator = () => {
     }
 
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-  };
-
-  const writeCuneiforms = (affixes, cuneiformVerb) => {
-    const { prefixes, suffixes } = affixes;
-    const VOWELS = ["a", "e", "i", "u"];
-    let cuneiforms;
-    if (reduplicated && aspect === "perfective") {
-      cuneiforms = cuneiformVerb + cuneiformVerb;
-    } else if (reduplicated && aspect === "imperfective") {
-      const verbalStem = defaultVerbs.filter(verb => verb.id === verbID);
-      if (verbalStem.length > 0) {
-        // we get perfective form
-        cuneiforms = verbalStem[0].cuneiform + imperfectiveForm.cuneiform;
-      } else {
-        cuneiforms = cuneiformVerb + cuneiformVerb;
-      }
-    } else {
-      cuneiforms = cuneiformVerb;
-    }
-    // we reverse the prefixes list so we can start building from the stem to the first prefix
-    prefixes.reverse().forEach(syllable => {
-      let result = "";
-      // excludes single consonants
-      if (VOWELS.includes(syllable) || syllable.length === 2) {
-        let _syllable = SYLLABARY[syllable.toUpperCase()];
-        if (_syllable === "none") {
-          result = "Ø";
-        } else if (Array.isArray(_syllable)) {
-          result = _syllable[0] === "none" ? "Ø" : _syllable[0];
-        } else {
-          result = _syllable;
-        }
-      } else if (syllable.length === 3 || syllable.length === 4) {
-        const a =
-          SYLLABARY[syllable.slice(0, syllable.length - 1).toUpperCase()];
-        const b = SYLLABARY[syllable.slice(-2).toUpperCase()];
-        // first part of syllable
-        if (a === "none") {
-          result = "Ø";
-        } else if (Array.isArray(a)) {
-          result = a[0] === "none" ? "Ø" : a[0];
-        } else {
-          result = a;
-        }
-        // second part of syllable
-        if (b === "none") {
-          result += "Ø";
-        } else if (Array.isArray(b)) {
-          result += b[0] === "none" ? "Ø" : b[0];
-        } else {
-          result += b;
-        }
-      } else {
-        if (
-          !VOWELS.includes(syllable) &&
-          prefixes.length === 1 &&
-          VOWELS.includes(verb.stem[0])
-        ) {
-          // consonant single prefix before vowel initial verb
-          const _syllable =
-            SYLLABARY[syllable.toUpperCase() + verb.stem[0].toUpperCase()];
-          if (_syllable) {
-            result = _syllable;
-          } else {
-            result = "Ø";
-          }
-        } else {
-          result = "Ø";
-        }
-      }
-      cuneiforms = result + cuneiforms;
-    });
-    // suffixes
-    let result;
-    if (suffixes.length === 2) {
-      const _syllable = SYLLABARY[suffixes.toUpperCase()];
-      if (_syllable === "none") {
-        result = "Ø";
-      } else if (Array.isArray(_syllable)) {
-        result = _syllable[0] === "none" ? "Ø" : _syllable[0];
-      } else {
-        result = _syllable;
-      }
-      cuneiforms = cuneiforms + result;
-    } else if (
-      suffixes === "n" &&
-      VOWELS.includes(verb.stem[verb.stem.length - 1])
-    ) {
-      // suffix "n" after a vowel ending verb
-      const constructedSuffix =
-        verb.stem[verb.stem.length - 1].toUpperCase() + "N";
-      const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
-      if (_syllable === "none") {
-        result = "Ø";
-      } else if (Array.isArray(_syllable)) {
-        result = _syllable[0] === "none" ? "Ø" : _syllable[0];
-      } else {
-        result = _syllable;
-      }
-      cuneiforms = cuneiforms + result;
-    }
-
-    return cuneiforms;
   };
 
   useEffect(() => {
@@ -656,6 +355,9 @@ const Conjugator = () => {
                       setCuneiformVerb(verb.cuneiform);
                       setImperfectiveForm(verb.imperfective);
                       setAspect("perfective");
+                      setTransitive(
+                        verb.transitive ? "transitive" : "intransitive"
+                      );
                     }
                   });
                 }}
