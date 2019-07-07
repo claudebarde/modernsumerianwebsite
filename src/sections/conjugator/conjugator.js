@@ -45,6 +45,7 @@ const Conjugator = () => {
   const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
 
   const [stem, setStem] = useState("");
+  const [verbID, setVerbID] = useState(null);
   const [cuneiformVerb, setCuneiformVerb] = useState(undefined);
   const [transitive, setTransitive] = useState(undefined);
   const [aspect, setAspect] = useState(undefined);
@@ -63,6 +64,7 @@ const Conjugator = () => {
   const [ventive, setVentive] = useState(false);
   const [middleMarker, setMiddleMarker] = useState(false);
   const [verb, setVerb] = useState(undefined);
+  const [imperfectiveForm, setImperfectiveForm] = useState(undefined);
 
   const personsOptions = () => [
     <Select.Option value="firstSingular" key="1sing">
@@ -360,9 +362,20 @@ const Conjugator = () => {
   const writeCuneiforms = (affixes, cuneiformVerb) => {
     const { prefixes, suffixes } = affixes;
     const VOWELS = ["a", "e", "i", "u"];
-    let cuneiforms = reduplicated
-      ? cuneiformVerb + cuneiformVerb
-      : cuneiformVerb;
+    let cuneiforms;
+    if (reduplicated && aspect === "perfective") {
+      cuneiforms = cuneiformVerb + cuneiformVerb;
+    } else if (reduplicated && aspect === "imperfective") {
+      const verbalStem = defaultVerbs.filter(verb => verb.id === verbID);
+      if (verbalStem.length > 0) {
+        // we get perfective form
+        cuneiforms = verbalStem[0].cuneiform + imperfectiveForm.cuneiform;
+      } else {
+        cuneiforms = cuneiformVerb + cuneiformVerb;
+      }
+    } else {
+      cuneiforms = cuneiformVerb;
+    }
     // we reverse the prefixes list so we can start building from the stem to the first prefix
     prefixes.reverse().forEach(syllable => {
       let result = "";
@@ -616,29 +629,39 @@ const Conjugator = () => {
                   );
                   if (matchingVerb.length > 0) {
                     setCuneiformVerb(matchingVerb[0].cuneiform);
+                    setImperfectiveForm(matchingVerb.imperfective);
                   } else {
                     setCuneiformVerb(undefined);
+                    setImperfectiveForm(undefined);
                   }
                 }}
               />
               <Select
                 value={
-                  defaultVerbs.filter(verb => verb.value === stem).length > 0
-                    ? stem
-                    : "suggestions"
+                  defaultVerbs.filter(
+                    verb =>
+                      verb.value === stem || verb.imperfective.form === stem
+                  ).length > 0
+                    ? { key: verbID }
+                    : { key: "suggestions" }
                 }
+                labelInValue
                 style={{ width: "50%" }}
                 onChange={value => {
-                  setStem(value);
                   // sets the cuneiform value for the stem
-                  defaultVerbs.forEach(
-                    verb =>
-                      verb.value === value && setCuneiformVerb(verb.cuneiform)
-                  );
+                  defaultVerbs.forEach(verb => {
+                    if (verb.id === value.key) {
+                      setStem(verb.value);
+                      setVerbID(verb.id);
+                      setCuneiformVerb(verb.cuneiform);
+                      setImperfectiveForm(verb.imperfective);
+                      setAspect("perfective");
+                    }
+                  });
                 }}
               >
                 {defaultVerbs.map(verb => (
-                  <Select.Option key={verb.value} value={verb.value}>
+                  <Select.Option key={verb.value} value={verb.id}>
                     {`${verb.cuneiform} (${verb.value})`}
                   </Select.Option>
                 ))}
@@ -665,10 +688,27 @@ const Conjugator = () => {
               <span style={{ color: "red" }}>*</span> Aspect:
             </p>
             <Select
+              value={aspect}
               placeholder="Aspect"
               style={{ width: "100%" }}
-              onChange={value => setAspect(value)}
-              value={aspect}
+              onChange={value => {
+                setAspect(value);
+                // if the verb is amoung the default verbs
+                if (value === "imperfective") {
+                  // we update the stem
+                  if (imperfectiveForm) {
+                    setStem(imperfectiveForm.form);
+                    setCuneiformVerb(imperfectiveForm.cuneiform);
+                  }
+                } else {
+                  defaultVerbs.forEach(verb => {
+                    if (verb.id === verbID) {
+                      setStem(verb.value);
+                      setCuneiformVerb(verb.cuneiform);
+                    }
+                  });
+                }
+              }}
               allowClear={true}
             >
               <Select.Option value="perfective">Perfective</Select.Option>
@@ -853,12 +893,6 @@ const Conjugator = () => {
             <Checkbox
               onChange={event => {
                 setReduplicated(event.target.checked);
-                /*if (event.target.checked) {
-                  // updates the stem
-                  setStem(`${stem}-${stem}`);
-                } else {
-                  setStem(stem.split("-")[0]);
-                }*/
               }}
               value={reduplicated}
             >

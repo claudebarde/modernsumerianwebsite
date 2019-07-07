@@ -30,11 +30,25 @@ const willSuffixVowelContract = (stem, suffix) => {
 };
 
 // make necessary phological changes to reduplicate stems
-const reduplicateStem = stem => {
+const reduplicateStem = (stem, aspect) => {
   const reducedStems = ["naĝ"];
   // reduces stems if necessary
-  if (reducedStems.includes(stem))
+  if (reducedStems.includes(stem) && aspect === "perfective") {
     return `${stem.slice(0, -1)}-${stem.slice(0, -1)}`;
+  }
+  // reduplicate stem before adding
+  if (aspect === "imperfective") {
+    if (stem.slice(-2).toLowerCase() === "ed") {
+      // case "aked"
+      return `${stem.slice(0, -2)}-${stem}`;
+    } else if (stem.slice(-2).toLowerCase() === "ud" && stem.length > 3) {
+      // case "shumud"
+      return `${stem.slice(0, -2)}-${stem}`;
+    } else if (stem.slice(-2).toLowerCase() === "ud" && stem.length === 3) {
+      // case "gud"
+      return `${stem.slice(0, -1)}-${stem}`;
+    }
+  }
 
   return `${stem}-${stem}`;
 };
@@ -72,7 +86,7 @@ module.exports = ({
   }
 
   // reduplicates verbal stem
-  if (reduplicated) stem = reduplicateStem(stem);
+  if (reduplicated && aspect) stem = reduplicateStem(stem, aspect);
   // handles middle marker
   if (middleMarker) indirectObject = "thirdSingularInanimate";
 
