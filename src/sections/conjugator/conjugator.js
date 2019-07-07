@@ -37,7 +37,9 @@ const Conjugator = () => {
     initialPersonPrefix: "#ffd6e7",
     preformative: "#ff4d4f",
     proclitic: "#ffa940",
-    ventive: "#36cfc9"
+    ventive: "#36cfc9",
+    middleMarker: "#ff7a45",
+    reduplicated: "#b7eb8f"
   };
 
   const affixesStyle = { fontWeight: "bold", fontSize: "1.2rem" };
@@ -56,8 +58,10 @@ const Conjugator = () => {
   const [initialPersonPrefix, setInitialPersonPrefix] = useState(undefined);
   const [preformative, setPreformative] = useState(undefined);
   const [proclitic, setProclitic] = useState(undefined);
+  const [reduplicated, setReduplicated] = useState(false);
   const [defaultVerbs, setDefaultVerbs] = useState([]);
   const [ventive, setVentive] = useState(false);
+  const [middleMarker, setMiddleMarker] = useState(false);
   const [verb, setVerb] = useState(undefined);
 
   const personsOptions = () => [
@@ -268,7 +272,7 @@ const Conjugator = () => {
       .filter(el => !!el)
       .concat(
         <Tooltip placement="bottom" title="stem" key="verbchain-stem">
-          <span style={affixesStyle}>{stem}</span>
+          <span style={affixesStyle}>{verb.stem}</span>
         </Tooltip>
       )
       .concat(coloredSuffixes.filter(el => !!el));
@@ -352,7 +356,9 @@ const Conjugator = () => {
   const writeCuneiforms = (affixes, cuneiformVerb) => {
     const { prefixes, suffixes } = affixes;
     const VOWELS = ["a", "e", "i", "u"];
-    let cuneiforms = cuneiformVerb;
+    let cuneiforms = reduplicated
+      ? cuneiformVerb + cuneiformVerb
+      : cuneiformVerb;
     // we reverse the prefixes list so we can start building from the stem to the first prefix
     prefixes.reverse().forEach(syllable => {
       let result = "";
@@ -390,11 +396,11 @@ const Conjugator = () => {
         if (
           !VOWELS.includes(syllable) &&
           prefixes.length === 1 &&
-          VOWELS.includes(stem[0])
+          VOWELS.includes(verb.stem[0])
         ) {
           // consonant single prefix before vowel initial verb
           const _syllable =
-            SYLLABARY[syllable.toUpperCase() + stem[0].toUpperCase()];
+            SYLLABARY[syllable.toUpperCase() + verb.stem[0].toUpperCase()];
           if (_syllable) {
             result = _syllable;
           } else {
@@ -418,9 +424,13 @@ const Conjugator = () => {
         result = _syllable;
       }
       cuneiforms = cuneiforms + result;
-    } else if (suffixes === "n" && VOWELS.includes(stem[stem.length - 1])) {
+    } else if (
+      suffixes === "n" &&
+      VOWELS.includes(verb.stem[verb.stem.length - 1])
+    ) {
       // suffix "n" after a vowel ending verb
-      const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
+      const constructedSuffix =
+        verb.stem[verb.stem.length - 1].toUpperCase() + "N";
       const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
       if (_syllable === "none") {
         result = "Ø";
@@ -447,7 +457,8 @@ const Conjugator = () => {
       indirectObject: persons.indirectObject,
       ventive,
       preformative,
-      proclitic
+      proclitic,
+      reduplicated
     });
     //console.log(newVerb);
     setVerb(newVerb);
@@ -460,7 +471,8 @@ const Conjugator = () => {
     initialPersonPrefix,
     preformative,
     proclitic,
-    ventive
+    ventive,
+    reduplicated
   ]);
 
   useEffect(() => {
@@ -816,13 +828,35 @@ const Conjugator = () => {
             xs={24}
             sm={7}
             className={styles.columns}
-            style={{ textAlign: "center" }}
+            style={{ textAlign: "left" }}
           >
             <Checkbox
               onChange={event => setVentive(event.target.checked)}
               value={ventive}
             >
               <Badge color={COLORS.ventive} text="Ventive" />
+            </Checkbox>
+            <br />
+            <Checkbox
+              onChange={event => setMiddleMarker(event.target.checked)}
+              value={middleMarker}
+            >
+              <Badge color={COLORS.middleMarker} text="Middle Marker" />
+            </Checkbox>
+            <br />
+            <Checkbox
+              onChange={event => {
+                setReduplicated(event.target.checked);
+                /*if (event.target.checked) {
+                  // updates the stem
+                  setStem(`${stem}-${stem}`);
+                } else {
+                  setStem(stem.split("-")[0]);
+                }*/
+              }}
+              value={reduplicated}
+            >
+              <Badge color={COLORS.reduplicated} text="Reduplicated Stem" />
             </Checkbox>
           </Col>
         </Row>

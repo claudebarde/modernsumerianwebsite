@@ -41,7 +41,8 @@ module.exports = ({
   indirectObject,
   ventive,
   preformative,
-  proclitic
+  proclitic,
+  reduplicated
 }) => {
   // initializes empty results
   let conjugatedVerb = "";
@@ -58,6 +59,8 @@ module.exports = ({
   ) {
     return;
   }
+
+  if (reduplicated) stem = `${stem}-${stem}`;
 
   if (transitive !== true) {
     if (!willSuffixVowelContract(stem, personalSuffixes2[subject])) {
@@ -692,5 +695,5 @@ module.exports = ({
   // parse final verb for syllables
   const syllables = syllableParser(conjugatedVerb, stem);
 
-  return { conjugatedVerb, affixes, notes, syllables };
+  return { conjugatedVerb, stem, affixes, notes, syllables };
 };
