@@ -29,6 +29,16 @@ const willSuffixVowelContract = (stem, suffix) => {
   return false;
 };
 
+// make necessary phological changes to reduplicate stems
+const reduplicateStem = stem => {
+  const reducedStems = ["naĝ"];
+  // reduces stems if necessary
+  if (reducedStems.includes(stem))
+    return `${stem.slice(0, -1)}-${stem.slice(0, -1)}`;
+
+  return `${stem}-${stem}`;
+};
+
 module.exports = ({
   stem,
   aspect,
@@ -60,7 +70,7 @@ module.exports = ({
     return;
   }
 
-  if (reduplicated) stem = `${stem}-${stem}`;
+  if (reduplicated) stem = reduplicateStem(stem);
 
   if (transitive !== true) {
     if (!willSuffixVowelContract(stem, personalSuffixes2[subject])) {
@@ -694,6 +704,8 @@ module.exports = ({
   }
   // parse final verb for syllables
   const syllables = syllableParser(conjugatedVerb, stem);
+  // removes dash for reduplicated stems
+  conjugatedVerb = conjugatedVerb.replace("-", "");
 
   return { conjugatedVerb, stem, affixes, notes, syllables };
 };
