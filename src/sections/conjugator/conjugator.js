@@ -74,7 +74,11 @@ const Conjugator = () => {
     <Select.Option value="thirdSingularAnimate" key="3singhuman">
       Third person singular animate
     </Select.Option>,
-    <Select.Option value="thirdSingularInanimate" key="3singnonhuman">
+    <Select.Option
+      value="thirdSingularInanimate"
+      key="3singnonhuman"
+      disabled={middleMarker}
+    >
       Third person singular inanimate
     </Select.Option>,
     <Select.Option value="firstPlural" key="1pl">
@@ -456,6 +460,7 @@ const Conjugator = () => {
       dimensionalPrefix: [{ prefix: dimensionalPrefix, initialPersonPrefix }],
       indirectObject: persons.indirectObject,
       ventive,
+      middleMarker,
       preformative,
       proclitic,
       reduplicated
@@ -472,6 +477,7 @@ const Conjugator = () => {
     preformative,
     proclitic,
     ventive,
+    middleMarker,
     reduplicated
   ]);
 

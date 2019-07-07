@@ -50,6 +50,7 @@ module.exports = ({
   initialPersonPrefix,
   indirectObject,
   ventive,
+  middleMarker,
   preformative,
   proclitic,
   reduplicated
@@ -70,7 +71,10 @@ module.exports = ({
     return;
   }
 
+  // reduplicates verbal stem
   if (reduplicated) stem = reduplicateStem(stem);
+  // handles middle marker
+  if (middleMarker) indirectObject = "thirdSingularInanimate";
 
   if (transitive !== true) {
     if (!willSuffixVowelContract(stem, personalSuffixes2[subject])) {
