@@ -83,6 +83,7 @@ const Conjugator = () => {
 
   const displayConjugatedVerb = () => {
     if (verb) {
+      console.log(verb.cuneiforms.split(""));
       return (
         <>
           <Row type="flex" justify="start">
@@ -95,7 +96,12 @@ const Conjugator = () => {
                   ({colorizeAffixes(verb)})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
-                  {cuneiformVerb && <TextTransition text={verb.cuneiforms} />}
+                  {/*{cuneiformVerb && <TextTransition text={verb.cuneiforms} />} */}
+                  {cuneiformVerb && (
+                    <span className={styles.cuneiformsResult}>
+                      {verb.cuneiforms}
+                    </span>
+                  )}
                 </Col>
               </Row>
             </Col>

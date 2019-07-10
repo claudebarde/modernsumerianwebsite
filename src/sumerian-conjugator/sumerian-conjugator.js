@@ -22,7 +22,7 @@ const syllableParser = require("./syllableParser");
 // imports cuneiform writer
 const writeCuneiforms = require("./writeCuneiforms");
 
-const VOWELS = ["a", "e", "i", "u"];
+const VOWELS = ["a", "e", "i", "u", "'"];
 
 // checks if vowel of suffix will contract
 const willSuffixVowelContract = (stem, suffix) => {
