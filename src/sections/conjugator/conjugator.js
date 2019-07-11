@@ -82,23 +82,25 @@ const Conjugator = () => {
     if (verb) {
       return (
         <>
-          <Row type="flex" justify="start">
-            <Col span={24}>
-              <Row style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                <Col xs={24} sm={8}>{`Verb chain: ${
-                  verb.conjugatedVerb
-                } `}</Col>
-                <Col xs={24} sm={8}>
-                  ({colorizeAffixes(verb)})
-                </Col>
-                <Col className={styles.cuneiform} xs={24} sm={8}>
-                  {cuneiformVerb && (
-                    <TextTransition text={verb.cuneiforms.chain} />
-                  )}
-                </Col>
-              </Row>
+          <Row
+            style={{ fontWeight: "bold", fontSize: "1.2rem" }}
+            type="flex"
+            justify="start"
+          >
+            <Col xs={24} sm={6}>
+              Verb chain:
+            </Col>
+            <Col xs={24} sm={6}>
+              {verb.conjugatedVerb}
+            </Col>
+            <Col xs={24} sm={6}>
+              ({colorizeAffixes(verb)})
+            </Col>
+            <Col className={styles.cuneiform} xs={24} sm={6}>
+              {cuneiformVerb && <TextTransition text={verb.cuneiforms.chain} />}
             </Col>
           </Row>
+          <div>{displayVerbMeanings()}</div>
           <Row gutter={24} type="flex" justify="center">
             <Col xs={24} sm={12}>
               {verb.affixes && verb.affixes.length > 0 ? (
@@ -145,6 +147,20 @@ const Conjugator = () => {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   };
 
+  const displayVerbMeanings = () => {
+    const verb = defaultVerbs.filter(verb => verb.id === verbID);
+
+    return (
+      <Text disabled>
+        {Object.keys(verb[0].meaning)
+          .map(meaning => `to ${meaning} ;`)
+          .join(" ")
+          .trim()
+          .slice(0, -1)}
+      </Text>
+    );
+  };
+
   useEffect(() => {
     const newVerb = conjugator({
       verbID,
@@ -163,7 +179,6 @@ const Conjugator = () => {
       reduplicated,
       defaultVerbs
     });
-    //console.log(newVerb);
     setVerb(newVerb);
   }, [
     verbID,
@@ -285,11 +300,17 @@ const Conjugator = () => {
                 // sets the cuneiform value for the stem
                 defaultVerbs.forEach(verb => {
                   if (verb.id === value) {
-                    setStem(verb.value);
+                    if (aspect === "perfective") {
+                      setStem(verb.value);
+                    } else if (aspect === "imperfective") {
+                      setStem(verb.imperfective.form);
+                    } else {
+                      setAspect("perfective");
+                      setStem(verb.value);
+                    }
                     setVerbID(verb.id);
                     setCuneiformVerb(verb.cuneiform);
                     setImperfectiveForm(verb.imperfective);
-                    if (!aspect) setAspect("perfective");
                     setTransitive(
                       verb.transitive ? "transitive" : "intransitive"
                     );
@@ -303,46 +324,6 @@ const Conjugator = () => {
                 </Select.Option>
               ))}
             </Select>
-            {/**<Input.Group compact>
-              <Input
-                style={{ width: "50%" }}
-                placeholder="Verb Stem"
-                value={stem}
-              />
-              <Select
-                value={
-                  defaultVerbs.filter(
-                    verb =>
-                      verb.value === stem || verb.imperfective.form === stem
-                  ).length > 0
-                    ? { key: verbID }
-                    : { key: "suggestions" }
-                }
-                labelInValue
-                style={{ width: "50%" }}
-                onChange={value => {
-                  // sets the cuneiform value for the stem
-                  defaultVerbs.forEach(verb => {
-                    if (verb.id === value.key) {
-                      setStem(verb.value);
-                      setVerbID(verb.id);
-                      setCuneiformVerb(verb.cuneiform);
-                      setImperfectiveForm(verb.imperfective);
-                      setAspect("perfective");
-                      setTransitive(
-                        verb.transitive ? "transitive" : "intransitive"
-                      );
-                    }
-                  });
-                }}
-              >
-                {defaultVerbs.map(verb => (
-                  <Select.Option key={verb.value} value={verb.id}>
-                    {`${verb.cuneiform} (${verb.value})`}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Input.Group> */}
           </Col>
           <Col xs={24} sm={7} className={styles.columns}>
             <p>
