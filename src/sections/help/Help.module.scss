@@ -1,0 +1,62 @@
+@import "../../config.scss";
+
+.main {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0px;
+  background-color: $background-color;
+}
+
+.help {
+  width: $card-width;
+  background-color: white;
+}
+
+.startReview {
+  padding: 20px;
+  width: 40%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cuneiformCol {
+  text-align: center;
+  font-size: 2.6rem;
+  padding: 10px 3px;
+  border: solid 1px white;
+}
+
+.cuneiformCol:hover {
+  cursor: pointer;
+  border: solid 1px #e8e8e8;
+  background-color: #fafafa;
+}
+
+.noCuneiformPreview {
+  text-align: center;
+  background-color: white;
+  padding: 20px;
+}
+
+.cuneiformImage {
+  background-color: white;
+}
+
+.cuneiformImage img {
+  display: block;
+  margin: 0 auto;
+}
+
+.confirmImage {
+  height: 40px;
+  margin: 0px 5px;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 300px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .help {
+    width: 95%;
+    background-color: white;
+  }
+}

@@ -6,7 +6,6 @@ import {
   Typography,
   Checkbox,
   Empty,
-  Input,
   Select,
   Badge,
   List
@@ -14,9 +13,7 @@ import {
 import TextTransition from "react-text-transition";
 
 import conjugator from "../../sumerian-conjugator/sumerian-conjugator";
-import writeCuneiforms from "../../sumerian-conjugator/writeCuneiforms";
 import { colorizeAffixes, COLORS } from "./colorizeAffixes";
-//import defaultVerbs from "./defaultVerbs";
 
 import styles from "./conjugator.module.scss";
 
@@ -83,7 +80,6 @@ const Conjugator = () => {
 
   const displayConjugatedVerb = () => {
     if (verb) {
-      console.log(verb.cuneiforms.split(""));
       return (
         <>
           <Row type="flex" justify="start">
@@ -96,11 +92,8 @@ const Conjugator = () => {
                   ({colorizeAffixes(verb)})
                 </Col>
                 <Col className={styles.cuneiform} xs={24} sm={8}>
-                  {/*{cuneiformVerb && <TextTransition text={verb.cuneiforms} />} */}
                   {cuneiformVerb && (
-                    <span className={styles.cuneiformsResult}>
-                      {verb.cuneiforms}
-                    </span>
+                    <TextTransition text={verb.cuneiforms.chain} />
                   )}
                 </Col>
               </Row>
@@ -167,7 +160,8 @@ const Conjugator = () => {
       middleMarker,
       preformative,
       proclitic,
-      reduplicated
+      reduplicated,
+      defaultVerbs
     });
     //console.log(newVerb);
     setVerb(newVerb);
@@ -183,7 +177,8 @@ const Conjugator = () => {
     proclitic,
     ventive,
     middleMarker,
-    reduplicated
+    reduplicated,
+    defaultVerbs
   ]);
 
   useEffect(() => {
@@ -281,26 +276,38 @@ const Conjugator = () => {
             <p>
               <span style={{ color: "red" }}>*</span> Verbal stem:
             </p>
-            <Input.Group compact>
+            <Select
+              showSearch
+              style={{ width: "100%" }}
+              placeholder="Select a verb"
+              optionFilterProp="children"
+              onChange={value => {
+                // sets the cuneiform value for the stem
+                defaultVerbs.forEach(verb => {
+                  if (verb.id === value) {
+                    setStem(verb.value);
+                    setVerbID(verb.id);
+                    setCuneiformVerb(verb.cuneiform);
+                    setImperfectiveForm(verb.imperfective);
+                    if (!aspect) setAspect("perfective");
+                    setTransitive(
+                      verb.transitive ? "transitive" : "intransitive"
+                    );
+                  }
+                });
+              }}
+            >
+              {defaultVerbs.map((verb, i) => (
+                <Select.Option key={`${verb.value}-${i}`} value={verb.id}>
+                  {`${verb.cuneiform} (${verb.value})`}
+                </Select.Option>
+              ))}
+            </Select>
+            {/**<Input.Group compact>
               <Input
                 style={{ width: "50%" }}
                 placeholder="Verb Stem"
                 value={stem}
-                /*onChange={event => {
-                  const value = event.target.value;
-                  setStem(value);
-                  // sets the cuneiform value for the stem
-                  const matchingVerb = defaultVerbs.filter(
-                    verb => verb.value === value
-                  );
-                  if (matchingVerb.length > 0) {
-                    setCuneiformVerb(matchingVerb[0].cuneiform);
-                    setImperfectiveForm(matchingVerb.imperfective);
-                  } else {
-                    setCuneiformVerb(undefined);
-                    setImperfectiveForm(undefined);
-                  }
-                }}*/
               />
               <Select
                 value={
@@ -335,7 +342,7 @@ const Conjugator = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Input.Group>
+            </Input.Group> */}
           </Col>
           <Col xs={24} sm={7} className={styles.columns}>
             <p>

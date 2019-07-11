@@ -70,7 +70,8 @@ module.exports = ({
   middleMarker,
   preformative,
   proclitic,
-  reduplicated
+  reduplicated,
+  defaultVerbs
 }) => {
   // initializes empty results
   let conjugatedVerb = "";
@@ -782,7 +783,8 @@ module.exports = ({
     reduplicated,
     aspect,
     verbID,
-    stem
+    stem,
+    defaultVerbs
   });
 
   return { conjugatedVerb, stem, affixes, notes, syllables, cuneiforms };
