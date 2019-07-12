@@ -95,12 +95,12 @@
 const VOWELS = ["a", "e", "i", "u"];
 
 // parse syllables according to scheme
-const returnSyllables = (syllableStruct, prefixes) => {
+const returnSyllables = (syllableStruct, affixes) => {
   let syllablesCount = 0;
   const syllables = [];
 
   syllableStruct.forEach(syllable => {
-    const result = prefixes.slice(
+    const result = affixes.slice(
       syllablesCount,
       syllablesCount + syllable.length
     );
@@ -116,7 +116,7 @@ const syllableParser = (verb, stem) => {
   let result = [];
   const affixes = verb.split(stem);
   const prefixes = affixes[0]
-    .replace("sh", "&")
+    .replace("sh", "š")
     .replace("'", "")
     .replace("kh", "q");
   const suffixes = affixes[1];
@@ -244,6 +244,10 @@ const syllableParser = (verb, stem) => {
       result = returnSyllables(["V", "CV", "CV", "V"], prefixes);
       syllables.push(result);
       break;
+    case "VCVCCV":
+      result = returnSyllables(["V", "CVC", "CV"], prefixes);
+      syllables.push(result);
+      break;
     case "VCVVCV":
       result = returnSyllables(["V", "CV", "V", "CV"], prefixes);
       syllables.push(result);
@@ -273,12 +277,42 @@ const syllableParser = (verb, stem) => {
   }
 
   console.log(prefixesStruct, syllables.flat());
+  // parses suffixes
+  let _suffixes = [];
+  switch (suffixes) {
+    case "n":
+      _suffixes = returnSyllables(["C"], "n");
+      break;
+    case "en":
+      _suffixes = returnSyllables(["VC"], "en");
+      break;
+    case "nden":
+      _suffixes = returnSyllables(["C", "CVC"], "nden");
+      break;
+    case "enden":
+      _suffixes = returnSyllables(["VC", "CVC"], "enden");
+      break;
+    case "nzen":
+      _suffixes = returnSyllables(["C", "CVC"], "nzen");
+      break;
+    case "enzen":
+      _suffixes = returnSyllables(["VC", "CVC"], "enzen");
+      break;
+    case "sh":
+      _suffixes = returnSyllables(["C"], "š");
+      break;
+    case "esh":
+      _suffixes = returnSyllables(["VC"], "eš");
+      break;
+    default:
+      break;
+  }
 
   return {
     prefixes: syllables
       .flat()
-      .map(syllable => syllable.replace("&", "sh").replace("q", "kh")),
-    suffixes
+      .map(syllable => syllable.replace("š", "sh").replace("q", "kh")),
+    suffixes: _suffixes.map(suffix => suffix.replace("š", "sh"))
   };
 };
 

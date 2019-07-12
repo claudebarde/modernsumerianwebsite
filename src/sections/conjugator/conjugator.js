@@ -80,27 +80,48 @@ const Conjugator = () => {
 
   const displayConjugatedVerb = () => {
     if (verb) {
+      // displays syllable structure
+      let _syllables = "";
+      if (verb.syllables.prefixes.length > 0) {
+        // adds prefixes
+        verb.syllables.prefixes.forEach(
+          prefix => (_syllables = `${prefix}-${_syllables}`)
+        );
+      }
+      // adds verb stem
+      _syllables = _syllables + verb.stem;
+      if (verb.syllables.suffixes.length > 0) {
+        // adds suffixes
+        _syllables =
+          _syllables +
+          verb.syllables.suffixes.map(suffix => `-${suffix}`).join("");
+      }
+
       return (
         <>
-          <Row
-            style={{ fontWeight: "bold", fontSize: "1.2rem" }}
-            type="flex"
-            justify="start"
-          >
-            <Col xs={24} sm={6}>
+          <Row type="flex" justify="start" align="top">
+            <Col xs={24} sm={3} className={styles.verbalForms}>
               Verb chain:
             </Col>
-            <Col xs={24} sm={6}>
-              {verb.conjugatedVerb}
+            <Col xs={24} sm={7}>
+              <div className={styles.verbalForms}>{verb.conjugatedVerb}</div>
+              <div>{displayVerbMeanings()}</div>
             </Col>
-            <Col xs={24} sm={6}>
+            <Col xs={24} sm={7} className={styles.verbalForms}>
               ({colorizeAffixes(verb)})
             </Col>
-            <Col className={styles.cuneiform} xs={24} sm={6}>
-              {cuneiformVerb && <TextTransition text={verb.cuneiforms.chain} />}
+            <Col xs={24} sm={7}>
+              <div className={styles.verbalForms}>
+                {cuneiformVerb && (
+                  <TextTransition text={verb.cuneiforms.chain} />
+                )}
+              </div>
+              <div>
+                <Text disabled>{_syllables}</Text>
+              </div>
             </Col>
           </Row>
-          <div>{displayVerbMeanings()}</div>
+
           <Row gutter={24} type="flex" justify="center">
             <Col xs={24} sm={12}>
               {verb.affixes && verb.affixes.length > 0 ? (

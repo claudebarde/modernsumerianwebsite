@@ -1,5 +1,43 @@
 const { SYLLABARY } = require("../sections/resources/syllabary/syllabaryData");
 
+const validateSyllable = (_syllable, cuneiforms) => {
+  let result;
+  if (_syllable === "none") {
+    result = "Ø";
+  } else if (Array.isArray(_syllable)) {
+    result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+  } else {
+    result = _syllable;
+  }
+
+  return cuneiforms + result;
+};
+// slices CVC syllables
+const sliceSyllable = syllable => {
+  let result;
+
+  const a = SYLLABARY[syllable.slice(0, syllable.length - 1).toUpperCase()];
+  const b = SYLLABARY[syllable.slice(-2).toUpperCase()];
+  // first part of syllable
+  if (a === "none") {
+    result = "Ø";
+  } else if (Array.isArray(a)) {
+    result = a[0] === "none" ? "Ø" : a[0];
+  } else {
+    result = a;
+  }
+  // second part of syllable
+  if (b === "none") {
+    result += "Ø";
+  } else if (Array.isArray(b)) {
+    result += b[0] === "none" ? "Ø" : b[0];
+  } else {
+    result += b;
+  }
+
+  return result;
+};
+
 module.exports = ({
   affixes,
   reduplicated,
@@ -46,24 +84,7 @@ module.exports = ({
         result = _syllable;
       }
     } else if (syllable.length === 3 || syllable.length === 4) {
-      const a = SYLLABARY[syllable.slice(0, syllable.length - 1).toUpperCase()];
-      const b = SYLLABARY[syllable.slice(-2).toUpperCase()];
-      // first part of syllable
-      if (a === "none") {
-        result = "Ø";
-      } else if (Array.isArray(a)) {
-        result = a[0] === "none" ? "Ø" : a[0];
-      } else {
-        result = a;
-      }
-      // second part of syllable
-      if (b === "none") {
-        result += "Ø";
-      } else if (Array.isArray(b)) {
-        result += b[0] === "none" ? "Ø" : b[0];
-      } else {
-        result += b;
-      }
+      result = sliceSyllable(syllable);
     } else {
       if (
         !VOWELS.includes(syllable) &&
@@ -91,29 +112,40 @@ module.exports = ({
   characters = characters.reverse();
   characters.push(cuneiformBase);
   // suffixes
+  console.log(suffixes);
   let result;
-  if (suffixes.length === 2) {
-    const _syllable = SYLLABARY[suffixes.toUpperCase()];
-    if (_syllable === "none") {
-      result = "Ø";
-    } else if (Array.isArray(_syllable)) {
-      result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+  if (suffixes.length === 1) {
+    if (!VOWELS.includes(stem[stem.length - 1])) {
+      const _syllable = SYLLABARY[suffixes[0].toUpperCase()];
+      cuneiforms = validateSyllable(_syllable, cuneiforms);
     } else {
-      result = _syllable;
+      if (suffixes[0] === "n") {
+        // suffix "n" after a vowel ending verb
+        const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
+        const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
+        cuneiforms = validateSyllable(_syllable, cuneiforms);
+      } else if (suffixes[0] === "sh") {
+        // suffix "sh" after a vowel ending verb
+        const constructedSuffix = stem[stem.length - 1].toUpperCase() + "SH";
+        const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
+        cuneiforms = validateSyllable(_syllable, cuneiforms);
+      }
     }
-    cuneiforms = cuneiforms + result;
-  } else if (suffixes === "n" && VOWELS.includes(stem[stem.length - 1])) {
-    // suffix "n" after a vowel ending verb
-    const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
-    const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
-    if (_syllable === "none") {
-      result = "Ø";
-    } else if (Array.isArray(_syllable)) {
-      result = _syllable[0] === "none" ? "Ø" : _syllable[0];
+  } else if (suffixes.length === 2) {
+    if (suffixes[0] === "n") {
+      // first syllable
+      let _syllable =
+        SYLLABARY[(stem[stem.length - 1] + suffixes[0]).toUpperCase()];
+      cuneiforms = validateSyllable(_syllable, cuneiforms);
+      // second syllable
+      cuneiforms = cuneiforms + sliceSyllable(suffixes[1]);
     } else {
-      result = _syllable;
+      // first syllable
+      let _syllable = SYLLABARY[suffixes[0].toUpperCase()];
+      cuneiforms = validateSyllable(_syllable, cuneiforms);
+      // second syllable
+      cuneiforms = cuneiforms + sliceSyllable(suffixes[1]);
     }
-    cuneiforms = cuneiforms + result;
   }
   // we push the suffix
   if (result) characters.push(result);
