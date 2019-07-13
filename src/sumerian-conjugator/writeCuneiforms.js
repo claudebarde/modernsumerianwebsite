@@ -114,7 +114,6 @@ module.exports = ({
   characters = characters.reverse();
   characters.push(cuneiformBase);
   // suffixes
-  let result;
   if (suffixes.length === 1) {
     if (!VOWELS.includes(stem[stem.length - 1])) {
       const _syllable = SYLLABARY[suffixes[0].toUpperCase()];
@@ -125,10 +124,9 @@ module.exports = ({
         const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
         const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
         cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
-      } else if (suffixes[0] === "sh") {
+      } else if (suffixes[0] === "e") {
         // suffix "sh" after a vowel ending verb
-        const constructedSuffix = stem[stem.length - 1].toUpperCase() + "SH";
-        const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
+        const _syllable = SYLLABARY["E"];
         cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
       }
     }
@@ -147,9 +145,13 @@ module.exports = ({
       // second syllable
       cuneiforms = cuneiforms + sliceSyllable(suffixes[1]);
     }
+  } else {
+    const suffixChain = suffixes.map(suffix => {
+      const _syllable = SYLLABARY[suffix.toUpperCase()];
+      return validateSyllable(_syllable, cuneiforms);
+    });
+    cuneiforms = cuneiforms + suffixChain.join("");
   }
-  // we push the suffix
-  if (result) characters.push(result);
 
   return { chain: cuneiforms, characters };
 };

@@ -260,11 +260,11 @@ module.exports = ({
       }
 
       conjugatedVerb = personalPrefix + stem + personalSuffix;
-      // saves affixes
+      // saves sufix
       affixes.push({
         type: "suffix",
         function: "transitive subject",
-        rawForm: personalSuffixes2[subject],
+        rawForm: personalSuffixes1[subject],
         form: personalSuffix
       });
     }
@@ -623,11 +623,7 @@ module.exports = ({
           form: preformative
         });
       } else if (preformative === "u") {
-        if (aspect !== "perfective") {
-          notes.push(`Preformative "u" only appears in perfective forms.`);
-        } else {
-          conjugatedVerb = "u" + conjugatedVerb;
-        }
+        conjugatedVerb = "u" + conjugatedVerb;
         // saves affixes
         affixes.push({
           type: "prefix",
@@ -673,6 +669,10 @@ module.exports = ({
       rawForm: preformative,
       form: preformativePrefix
     });
+  }
+  // "u" is generally found with verbs in perfective
+  if (preformative === "u" && aspect === "imperfective") {
+    notes.push(`Preformative "u" only appears in perfective forms.`);
   }
 
   /*
