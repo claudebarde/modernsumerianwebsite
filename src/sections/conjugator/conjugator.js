@@ -8,7 +8,8 @@ import {
   Empty,
   Select,
   Badge,
-  List
+  List,
+  Button
 } from "antd";
 import TextTransition from "react-text-transition";
 
@@ -316,7 +317,11 @@ const Conjugator = () => {
               showSearch
               style={{ width: "100%" }}
               placeholder="Select a verb"
-              optionFilterProp="children"
+              optionLabelProp="children"
+              value={defaultVerbs
+                .filter(verb => verbID === verb.id)
+                .map(verb => `${verb.cuneiform} (${verb.value})`)
+                .join("")}
               onChange={value => {
                 // sets the cuneiform value for the stem
                 defaultVerbs.forEach(verb => {
@@ -556,14 +561,14 @@ const Conjugator = () => {
           >
             <Checkbox
               onChange={event => setVentive(event.target.checked)}
-              value={ventive}
+              checked={ventive}
             >
               <Badge color={COLORS.ventive} text="Ventive" />
             </Checkbox>
             <br />
             <Checkbox
               onChange={event => setMiddleMarker(event.target.checked)}
-              value={middleMarker}
+              checked={middleMarker}
             >
               <Badge color={COLORS.middleMarker} text="Middle Marker" />
             </Checkbox>
@@ -572,12 +577,42 @@ const Conjugator = () => {
               onChange={event => {
                 setReduplicated(event.target.checked);
               }}
-              value={reduplicated}
+              checked={reduplicated}
             >
               <Badge color={COLORS.reduplicated} text="Reduplicated Stem" />
             </Checkbox>
           </Col>
         </Row>
+        <div style={{ width: "100%", textAlign: "center", padding: "5px" }}>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              setStem("");
+              setVerbID(null);
+              setCuneiformVerb(undefined);
+              setTransitive(undefined);
+              setAspect(undefined);
+              setPersons({
+                subject: undefined,
+                directObject: undefined,
+                indirectObject: undefined,
+                obliqueObject: undefined
+              });
+              setDimensionalPrefixes(undefined);
+              setInitialPersonPrefix(undefined);
+              setPreformative(undefined);
+              setProclitic(undefined);
+              setReduplicated(false);
+              setVentive(false);
+              setMiddleMarker(false);
+              setVerb(undefined);
+              setImperfectiveForm(undefined);
+            }}
+          >
+            Reset
+          </Button>
+        </div>
         <hr />
         <div>{displayConjugatedVerb()}</div>
       </Card>
