@@ -1,6 +1,6 @@
 const { SYLLABARY } = require("../sections/resources/syllabary/syllabaryData");
 
-const validateSyllable = (_syllable, cuneiforms) => {
+const validateSyllable = _syllable => {
   let result;
   if (_syllable === "none") {
     result = "Ø";
@@ -10,7 +10,7 @@ const validateSyllable = (_syllable, cuneiforms) => {
     result = _syllable;
   }
 
-  return cuneiforms + result;
+  return result;
 };
 // slices CVC syllables
 const sliceSyllable = syllable => {
@@ -72,10 +72,12 @@ module.exports = ({
   cuneiformBase = cuneiforms;
   // we reverse the prefixes list so we can start building from the stem to the first prefix
   prefixes.reverse().forEach((syllable, index) => {
-    let result = "";
+    let result, _syllable;
     // excludes single consonants
-    if (VOWELS.includes(syllable) || syllable.length === 2) {
-      let _syllable = SYLLABARY[syllable.toUpperCase()];
+    if (syllable === "shi") {
+      result = SYLLABARY["SHI"];
+    } else if (VOWELS.includes(syllable) || syllable.length === 2) {
+      _syllable = SYLLABARY[syllable.toUpperCase()];
       if (_syllable === "none") {
         result = "Ø";
       } else if (Array.isArray(_syllable)) {
@@ -112,23 +114,22 @@ module.exports = ({
   characters = characters.reverse();
   characters.push(cuneiformBase);
   // suffixes
-  console.log(suffixes);
   let result;
   if (suffixes.length === 1) {
     if (!VOWELS.includes(stem[stem.length - 1])) {
       const _syllable = SYLLABARY[suffixes[0].toUpperCase()];
-      cuneiforms = validateSyllable(_syllable, cuneiforms);
+      cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
     } else {
       if (suffixes[0] === "n") {
         // suffix "n" after a vowel ending verb
         const constructedSuffix = stem[stem.length - 1].toUpperCase() + "N";
         const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
-        cuneiforms = validateSyllable(_syllable, cuneiforms);
+        cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
       } else if (suffixes[0] === "sh") {
         // suffix "sh" after a vowel ending verb
         const constructedSuffix = stem[stem.length - 1].toUpperCase() + "SH";
         const _syllable = SYLLABARY[constructedSuffix.toUpperCase()];
-        cuneiforms = validateSyllable(_syllable, cuneiforms);
+        cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
       }
     }
   } else if (suffixes.length === 2) {
@@ -136,13 +137,13 @@ module.exports = ({
       // first syllable
       let _syllable =
         SYLLABARY[(stem[stem.length - 1] + suffixes[0]).toUpperCase()];
-      cuneiforms = validateSyllable(_syllable, cuneiforms);
+      cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
       // second syllable
       cuneiforms = cuneiforms + sliceSyllable(suffixes[1]);
     } else {
       // first syllable
       let _syllable = SYLLABARY[suffixes[0].toUpperCase()];
-      cuneiforms = validateSyllable(_syllable, cuneiforms);
+      cuneiforms = cuneiforms + validateSyllable(_syllable, cuneiforms);
       // second syllable
       cuneiforms = cuneiforms + sliceSyllable(suffixes[1]);
     }
