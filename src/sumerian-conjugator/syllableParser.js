@@ -107,6 +107,10 @@ const syllableParser = (verb, stem) => {
       result = returnSyllables(["CV", "VC", "CV", "V"], prefixes);
       syllables.push(result);
       break;
+    case "CVCVCCVC":
+      result = returnSyllables(["CV", "CVC", "CVC"], prefixes);
+      syllables.push(result);
+      break;
     // starts with vowel
     case "V":
       syllables.push(prefixes);

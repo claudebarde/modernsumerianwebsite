@@ -36,11 +36,6 @@ const Header = () => {
               <span>Resources</span>
             </Link>
           </li>
-          <li>
-            <Link to="/help">
-              <span>Help</span>
-            </Link>
-          </li>
         </ul>
       </nav>
       <Icon
@@ -80,11 +75,6 @@ const Header = () => {
             <li onClick={() => setVisibleMenu(false)}>
               <Link to="/resources">
                 <span>Resources</span>
-              </Link>
-            </li>
-            <li onClick={() => setVisibleMenu(false)}>
-              <Link to="/help">
-                <span>Help</span>
               </Link>
             </li>
           </ul>

@@ -12,6 +12,7 @@ const { Text, Paragraph } = Typography;
 
 const Footer = () => {
   const updates = [
+    { date: "Jul 1, 2019", text: "Big update of the conjugator!" },
     { date: "Jul 1, 2019", text: "New footer with links and support" },
     { date: "Jun 20, 2019", text: "New quiz game" },
     { date: "Jun 18, 2019", text: "New flashcard game" },
