@@ -19,10 +19,11 @@ const {
 } = require("./personalPrefixesAndSuffixes/indirectObjectPrefixes");
 // imports syllable parser
 const syllableParser = require("./syllableParser");
+const syllableParserExperiment = require("./syllableParserExperiment");
 // imports cuneiform writer
 const writeCuneiforms = require("./writeCuneiforms");
 
-const VOWELS = ["a", "e", "i", "u", "'"];
+const VOWELS = ["a", "e", "i", "u"];
 
 // checks if vowel of suffix will contract
 const willSuffixVowelContract = (stem, suffix) => {
@@ -150,6 +151,8 @@ module.exports = ({
           } else if (indirectObject) {
             const indirectPrefix = indirectObjectPrefixes[indirectObject];
             personalPrefix = indirectPrefix[indirectPrefix.length - 1];
+          } else if (middleMarker) {
+            personalPrefix = "a";
           } else if (ventive) {
             personalPrefix = "u";
           } else if (preformative) {
@@ -779,7 +782,8 @@ module.exports = ({
     });
   }
   // parse final verb for syllables
-  const syllables = syllableParser(conjugatedVerb, stem);
+  //const syllables = syllableParser(conjugatedVerb, stem);
+  const syllables = syllableParserExperiment({ word: conjugatedVerb, stem });
   // removes dash for reduplicated stems
   conjugatedVerb = conjugatedVerb.replace("-", "");
   // writes verb in cuneiforms

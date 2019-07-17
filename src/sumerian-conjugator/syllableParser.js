@@ -150,6 +150,10 @@ const syllableParser = (verb, stem) => {
       result = returnSyllables(["VC", "CV", "V"], prefixes);
       syllables.push(result);
       break;
+    case "VCVCV":
+      result = returnSyllables(["V", "CV", "CV"], prefixes);
+      syllables.push(result);
+      break;
     case "VCVCVV":
       result = returnSyllables(["V", "CV", "CV", "V"], prefixes);
       syllables.push(result);

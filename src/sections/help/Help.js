@@ -36,7 +36,7 @@ const INDEXES = [
   "Z"
 ];
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Help = () => {
   const [ePSDelement, setePSDelement] = useState(undefined);
@@ -131,11 +131,11 @@ const Help = () => {
     // we loop through all the Unicode blocks for cuneiforms
     for (let i = start; i <= end; i++) {
       //console.log(String.fromCodePoint(`0x${i.toString(16)}`));
-      if (rowOfCuneiforms.length < 6) {
+      if (rowOfCuneiforms.length < 4) {
         rowOfCuneiforms.push(String.fromCodePoint(`0x${i.toString(16)}`));
       } else {
         results.push(
-          <Row key={`row${results.length}`}>
+          <Row key={`row${results.length}`} type="flex" justify="center">
             {rowOfCuneiforms.map((el, index) => (
               <Col
                 key={`row${results.length}-col${index}`}
@@ -157,12 +157,12 @@ const Help = () => {
     // we check if there are elements left in array
     if (rowOfCuneiforms.length !== 0) {
       results.push(
-        <Row key={`row${results.length}`}>
+        <Row key={`row${results.length}`} type="flex" justify="center">
           {rowOfCuneiforms.map((el, index) => (
             <Col
               key={`row${results.length}-col${index}`}
               xs={12}
-              sm={3}
+              sm={4}
               className={styles.cuneiformCol}
               onClick={() => showConfirm(el)}
             >
@@ -260,7 +260,7 @@ const Help = () => {
           representations of cuneiforms are matched with Akkadian or Babylonian
           words. This Unicode dictionary is crucial in order to write and read
           Sumerian online, but also to create various tools that can make use of
-          it, like the conjugator or various apps.
+          it, like the conjugator or other apps.
           <br />
           <br />
           I started some of this work by myself but it is a colossal entreprise:
@@ -275,6 +275,27 @@ const Help = () => {
           <br /> People who will input more than 50 right answers will have
           their names in the acknowledgements of the dictionary :) But you can
           also remain anonymous if you prefer.
+          <br />
+          <br />I will review myself every entry submitted by everyone and add
+          them to the Sumerian online dictionary that will then be available and
+          public on the "Dictionary" page.
+          <br />
+          <br />
+          This cannot be done without you, be a part of it :)
+          <br />
+          <br />
+          <Text disabled>
+            (You need to install a cuneiform font to display the characters, for
+            example{" "}
+            <a
+              href="http://users.teilar.gr/~g1951d/Akkadian.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              this one
+            </a>
+            .)
+          </Text>
         </div>
         <div className={styles.startReview}>
           <Input
