@@ -1,239 +1,162 @@
-const VOWELS = ["a", "e", "i", "u"];
+// replaces glottal stops for first person singular
+const glottalStopReplace = new RegExp("([aeiu])\\'", "g");
+// identifies 2 adjacent consonants
+const consonantRegex = new RegExp(
+  "([bdghklmnprstzšĝ])([bdghklmnprstzšĝ])",
+  "g"
+);
+// identifies 2 adjacent vowels
+const vowelRegex = new RegExp("([aeiu])([aeiu])", "g");
+// identifies VCV syllable
+const VCVregex = new RegExp("\\|([aeiu])([bdghklmnprstzšĝ])([aeiu])");
+// identifies CV syllable followed by other CV syllables
+const CVCVregex = new RegExp(
+  "\\|([bdghklmnprstzšĝ][aeiu]){2,}[^bdghklmnprstzšĝ]",
+  "g"
+);
+// identifies CVCVC syllables
+const CVCVCregex = new RegExp(
+  "([bdghklmnprstzšĝ][aeiu]){2,}([bdghklmnprstzšĝ]||)",
+  "g"
+);
 
-// parse syllables according to scheme
-const returnSyllables = (syllableStruct, affixes) => {
-  let syllablesCount = 0;
-  const syllables = [];
+const splitString = stringWithDelimiters => {
+  let matches = [];
+  // tests for adjacent consonants
+  stringWithDelimiters = stringWithDelimiters.replace(consonantRegex, "$1|$2");
+  // tests for adjacent vowels
+  stringWithDelimiters = stringWithDelimiters.replace(vowelRegex, "$1|$2");
+  // test for VCV at initial position
+  stringWithDelimiters = stringWithDelimiters.replace(VCVregex, "|$1|$2$3");
+  // test for CVCV
+  matches = stringWithDelimiters.match(CVCVregex);
+  if (matches) {
+    matches.forEach(match => {
+      // makes it easier to slice the string
+      let rawString = match.replace(/\|/g, "");
+      let string = "";
+      // slice the string
+      for (let i = 0; i < rawString.length; i++) {
+        // replace each CV by CV|
+        if (i % 2 === 0) {
+          string += rawString.slice(i, i + 2) + "|";
+        }
+      }
+      // sets final delimiter
+      stringWithDelimiters = stringWithDelimiters.replace(match, "|" + string);
+    });
+  }
+  // test for CVCVC
+  matches = stringWithDelimiters.match(CVCVCregex);
+  if (matches) {
+    matches.forEach(match => {
+      let string = "";
+      // keeps last CVC syllable for the end
+      let finalSyllable = match.slice(-3);
+      for (let i = 0; i < (match.length - 3) / 2; i++) {
+        // replace each CV by CV|
+        string += match.slice(i * 2, i * 2 + 2) + "|";
+      }
+      stringWithDelimiters = stringWithDelimiters.replace(
+        match,
+        string + finalSyllable
+      );
+    });
+  }
 
-  syllableStruct.forEach(syllable => {
-    const result = affixes.slice(
-      syllablesCount,
-      syllablesCount + syllable.length
-    );
-    syllablesCount += syllable.length;
-    syllables.push(result);
-  });
-
-  return syllables;
+  return stringWithDelimiters;
 };
 
-const syllableParser = (verb, stem) => {
-  let syllables = [];
-  let result = [];
-  const affixes = verb.split(stem);
-  const prefixes = affixes[0]
-    .replace("sh", "š")
-    .replace("'", "")
-    .replace("kh", "q");
-  const suffixes = affixes[1];
-  // we split prefixes into syllable structure
-  let prefixesStruct = prefixes
-    .split("")
-    .map(letter => {
-      if (VOWELS.includes(letter)) return "V";
-      return "C";
-    })
-    .join("");
-  // we compare the result with prematched data
-  switch (prefixesStruct) {
-    // starts with consonant
-    case "C":
-      syllables.push(prefixes);
-      break;
-    case "CV":
-      syllables.push(prefixes);
-      break;
-    case "CVV":
-      result = returnSyllables(["CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVC":
-      result = returnSyllables(["CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "CCV":
-      result = returnSyllables(["C", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "CCVV":
-      result = returnSyllables(["C", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCV":
-      result = returnSyllables(["CV", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "CCVC":
-      result = returnSyllables(["C", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCVC":
-      result = returnSyllables(["CV", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVVCV":
-      result = returnSyllables(["CV", "V", "VC"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCCV":
-      result = returnSyllables(["CVC", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCVV":
-      result = returnSyllables(["CV", "CV", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVVCVV":
-      result = returnSyllables(["CV", "V", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCCVV":
-      result = returnSyllables(["CVC", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCCVC":
-      result = returnSyllables(["CVC", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "CCVVCVV":
-      result = returnSyllables(["C", "CV", "V", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCVCCV":
-      result = returnSyllables(["CV", "CVC", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVVCCVV":
-      result = returnSyllables(["CV", "VC", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "CVCVCCVC":
-      result = returnSyllables(["CV", "CVC", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    // starts with vowel
-    case "V":
-      syllables.push(prefixes);
-      break;
-    case "VC":
-      syllables.push(prefixes.replace("&", "sh").replace("q", "kh"));
-      break;
-    case "VCV":
-      result = returnSyllables(["V", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCC":
-      result = returnSyllables(["VC", "C"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVV":
-      result = returnSyllables(["V", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "VVCV":
-      result = returnSyllables(["V", "V", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVC":
-      result = returnSyllables(["V", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCCV":
-      result = returnSyllables(["VC", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCCVC":
-      result = returnSyllables(["VC", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCCVV":
-      result = returnSyllables(["VC", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVCV":
-      result = returnSyllables(["V", "CV", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVCVV":
-      result = returnSyllables(["V", "CV", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVCCV":
-      result = returnSyllables(["V", "CVC", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVVCV":
-      result = returnSyllables(["V", "CV", "V", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVVCVC":
-      result = returnSyllables(["V", "CV", "V", "CVC"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCCVVCV":
-      result = returnSyllables(["VC", "CV", "V", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCCVVCVV":
-      result = returnSyllables(["VC", "CV", "V", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVCVCCV":
-      result = returnSyllables(["V", "CV", "CVC", "CV"], prefixes);
-      syllables.push(result);
-      break;
-    case "VCVCVCCVV":
-      result = returnSyllables(["V", "CV", "CVC", "CV", "V"], prefixes);
-      syllables.push(result);
-      break;
-    default:
-      break;
+module.exports = ({ word, stem }) => {
+  word = word.toLowerCase().replace(glottalStopReplace, "$1$1");
+  // if there are 2 occurence of the same syllable for the stem
+  // the second one has more chance to be the stem
+  const firstOccurrence = word.indexOf(stem);
+  const secondOccurence = word.indexOf(stem, firstOccurrence + stem.length);
+  let prefixes, suffixes;
+  if (secondOccurence !== -1) {
+    // if the stem appears also in the prefixes or suffixes
+    prefixes = `|${word.slice(0, secondOccurence)}|`;
+    suffixes = `|${word.slice(secondOccurence + stem.length)}|`;
+  } else {
+    const affixes = word.split(stem);
+    prefixes = `|${affixes[0]}|`;
+    suffixes = `|${affixes[1]}|`;
   }
+  const splitPrefixes = splitString(prefixes);
+  const splitSuffixes = splitString(suffixes);
 
-  console.log(prefixesStruct, syllables.flat());
-  // parses suffixes
-  let _suffixes = [];
-  switch (suffixes) {
-    case "e":
-      _suffixes = returnSyllables(["V"], "e");
-      break;
-    case "n":
-      _suffixes = returnSyllables(["C"], "n");
-      break;
-    case "en":
-      _suffixes = returnSyllables(["VC"], "en");
-      break;
-    case "nden":
-      _suffixes = returnSyllables(["C", "CVC"], "nden");
-      break;
-    case "enden":
-      _suffixes = returnSyllables(["VC", "CVC"], "enden");
-      break;
-    case "nzen":
-      _suffixes = returnSyllables(["C", "CVC"], "nzen");
-      break;
-    case "enzen":
-      _suffixes = returnSyllables(["VC", "CVC"], "enzen");
-      break;
-    case "sh":
-      _suffixes = returnSyllables(["C"], "š");
-      break;
-    case "esh":
-      _suffixes = returnSyllables(["VC"], "eš");
-      break;
-    case "enee":
-      _suffixes = returnSyllables(["V", "CV", "V"], "enee");
-      break;
-    default:
-      break;
-  }
+  /*console.log(
+    "prefixes:",
+    splitPrefixes.split("|").filter(e => e),
+    "suffixes:",
+    splitSuffixes.split("|").filter(e => e)
+  );*/
 
   return {
-    prefixes: syllables
-      .flat()
-      .map(syllable => syllable.replace("š", "sh").replace("q", "kh")),
-    suffixes: _suffixes.map(suffix => suffix.replace("š", "sh"))
+    prefixes: splitPrefixes.split("|").filter(e => e),
+    suffixes: splitSuffixes.split("|").filter(e => e)
   };
 };
 
-module.exports = syllableParser;
+/*
+const consonants = "[bdghklmnprstzšĝ]";
+const corpus = ["šum", "ba", "murandašumšum", "baakeden", "ibaakedenden", "šešĝua", 
+                "šube", "murabdaasar", "numuraasar", "numurabsareden", "igi", "emeĝirzu", 
+                "nupadedam", "kituš", "hursaĝ", "imraaĝen"];
+// identifies 2 adjacent consonants
+const consonantRegex = new RegExp("([bdghklmnprstzšĝ])([bdghklmnprstzšĝ])", "g");
+// identifies 2 adjacent vowels
+const vowelRegex = new RegExp("([aeiu])([aeiu])", "g");
+// identifies VCV syllable
+const VCVregex = new RegExp("\\|([aeiu])([bdghklmnprstzšĝ])([aeiu])");
+// identifies CV syllable followed by other CV syllables
+const CVCVregex = new RegExp("\\|([bdghklmnprstzšĝ][aeiu]){2,}[^bdghklmnprstzšĝ]", "g");
+// identifies CVCVC syllables
+const CVCVCregex = new RegExp("([bdghklmnprstzšĝ][aeiu]){2,}([bdghklmnprstzšĝ]|\|)", "g")
+
+corpus.forEach(word => {
+  let stringWithDelimiters = `|${word.toLowerCase()}|`;
+  let matches = [];
+  // tests for adjacent consonants
+  stringWithDelimiters = stringWithDelimiters.replace(consonantRegex, "$1|$2");
+  // tests for adjacent vowels
+  stringWithDelimiters = stringWithDelimiters.replace(vowelRegex, "$1|$2");
+  // test for VCV at initial position
+  stringWithDelimiters = stringWithDelimiters.replace(VCVregex, "|$1|$2$3");
+  // test for CVCV
+  matches = stringWithDelimiters.match(CVCVregex);
+  if(matches){
+    matches.forEach(match => {
+      // makes it easier to slice the string
+      let rawString = match.replace(/\|/g, "");
+      let string = "";
+      // slice the string
+      for(i = 0; i < rawString.length; i++){
+        // replace each CV by CV|
+        if(i % 2 === 0){
+          string += rawString.slice(i, i + 2) + "|";
+        }
+      }
+      // sets final delimiter
+      stringWithDelimiters = stringWithDelimiters.replace(match, "|" + string);
+    })
+  }
+  // test for CVCVC
+  matches = stringWithDelimiters.match(CVCVCregex)
+  if(matches){
+    matches.forEach(match => {
+      let string = "";
+      // keeps last CVC syllable for the end
+      let finalSyllable = match.slice(-3);
+      for(i = 0; i < (match.length - 3) / 2; i++){
+        // replace each CV by CV|
+        string += match.slice(i * 2, i * 2 + 2) + "|";
+      }
+      stringWithDelimiters = stringWithDelimiters.replace(match, string + finalSyllable)
+    })
+  }
+  
+  
+  console.log(stringWithDelimiters);
+}); */

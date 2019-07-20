@@ -19,7 +19,6 @@ const {
 } = require("./personalPrefixesAndSuffixes/indirectObjectPrefixes");
 // imports syllable parser
 const syllableParser = require("./syllableParser");
-const syllableParserExperiment = require("./syllableParserExperiment");
 // imports cuneiform writer
 const writeCuneiforms = require("./writeCuneiforms");
 
@@ -783,7 +782,7 @@ module.exports = ({
   }
   // parse final verb for syllables
   //const syllables = syllableParser(conjugatedVerb, stem);
-  const syllables = syllableParserExperiment({ word: conjugatedVerb, stem });
+  const syllables = syllableParser({ word: conjugatedVerb, stem });
   // removes dash for reduplicated stems
   conjugatedVerb = conjugatedVerb.replace("-", "");
   // writes verb in cuneiforms

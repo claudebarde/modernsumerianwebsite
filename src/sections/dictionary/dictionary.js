@@ -18,10 +18,11 @@ import "firebase/firestore";
 import styles from "./dictionary.module.scss";
 import firebaseConfig from "../../config";
 
+firebase.initializeApp(firebaseConfig);
+
 const { Title, Text } = Typography;
 
 // Initialize Cloud Firestore through Firebase
-firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const Dictionary = () => {
