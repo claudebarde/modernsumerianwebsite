@@ -136,7 +136,7 @@ const Footer = () => {
                   image: "images/coffee.png"
                 },
                 {
-                  title: "Bitcoin",
+                  title: "Bitcoin 𒁉𒀉𒆪𒅔",
                   description: (
                     <Paragraph copyable className={styles.cryptoAddress}>
                       1F3cwLKsxeRkSp4LBLppfhFvmXssiioKUi
@@ -145,7 +145,7 @@ const Footer = () => {
                   image: "images/btc.png"
                 },
                 {
-                  title: "Ethereum",
+                  title: "Ethereum 𒂊𒋼𒊑𒌝",
                   description: (
                     <Paragraph copyable className={styles.cryptoAddress}>
                       0x9EA34bcbc7F0B4F64a97A221Ca717cF0011db650

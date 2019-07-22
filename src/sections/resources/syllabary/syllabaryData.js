@@ -86,7 +86,7 @@ export const SYLLABARY = {
   IR: "\u{12155}",
   IS: "none",
   ISH: "none",
-  IT: "none",
+  IT: ["\u{12009}", "creation", ""],
   IZ: "none",
   IĜ: "none",
   KA: "\u{12157}",
