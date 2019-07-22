@@ -1,0 +1,36 @@
+@import "../../../config.scss";
+
+.main {
+  background-color: $background-color;
+  padding: 20px 0px;
+}
+
+.weatherIcon {
+  width: 50px;
+}
+
+.weatherDescriptions {
+  width: 100%;
+}
+
+.weatherDescription {
+  margin: 5px;
+  font-size: 0.9rem;
+  white-space: normal;
+  width: 100%;
+}
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .main {
+    padding: 20px 0px;
+  }
+
+  .weatherDescription {
+    font-size: 0.9rem;
+  }
+
+  .weatherIcon {
+    width: 40px;
+  }
+}

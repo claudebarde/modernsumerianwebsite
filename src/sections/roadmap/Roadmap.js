@@ -24,7 +24,7 @@ const Roadmap = () => {
         </Row>
         <Row>
           <Col xs={{ span: 24, offset: 0 }} sm={{ span: 12, offset: 6 }}>
-            <Steps direction="vertical" current={1}>
+            <Steps direction="vertical" current={2}>
               <Step
                 title="New website"
                 description="Further tests must be run on the new dictionary and the new verb conjugator."
