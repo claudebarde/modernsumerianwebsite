@@ -51,8 +51,8 @@ const Landing = () => {
         className={`${styles.mainMobile} sections`}
         id="landingSectionMobile"
       >
-        <Title>Modern Sumerian</Title>
-        <Title level={3}>
+        <Title level={2}>Modern Sumerian</Title>
+        <Title level={4}>
           A language of the past <br />
           for the world of today
         </Title>

@@ -87,7 +87,7 @@ const Weather = () => {
             <Col xs={24} md={12} style={{ textAlign: "left" }}>
               {`Weather in ${city}`}
             </Col>
-            <Col xs={24} md={12} style={{ textAlign: "left" }}>{`𒉆𒀭 ${
+            <Col xs={24} md={12} className={styles.titleInCuneiforms}>{`𒉆𒀭 ${
               cities[city.toLowerCase()] ? cities[city.toLowerCase()] : city
             }𒀀`}</Col>
           </Row>
@@ -253,7 +253,7 @@ const Weather = () => {
         type="flex"
         justify="space-around"
         align="middle"
-        style={{ padding: "10px 40px" }}
+        className={styles.weatherDisplay}
       >
         <Col sm={24} md={7}>
           {nippurWeather}

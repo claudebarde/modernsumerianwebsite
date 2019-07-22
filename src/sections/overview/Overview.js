@@ -15,7 +15,7 @@ const Overview = () => {
         <Row
           type="flex"
           justify="space-around"
-          style={{ width: "100%", padding: "0px 40px" }}
+          className={styles.columnsDisplay}
         >
           <Col sm={24} md={8} className={styles.column}>
             <Link to="/dictionary">

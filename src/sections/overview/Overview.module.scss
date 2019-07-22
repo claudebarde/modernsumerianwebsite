@@ -5,6 +5,11 @@
   padding: 50px 0px;
 }
 
+.columnsDisplay {
+  width: 100%;
+  padding: 0px 40px;
+}
+
 .column {
   text-align: center;
 }
@@ -27,9 +32,16 @@
     padding: 20px 0px;
   }
 
+  .column {
+    margin: 10px 0px;
+  }
+
+  .columnsDisplay {
+    padding: 0px 10px;
+  }
+
   .overviewCard {
     width: 90%;
     margin: 0 auto;
-    margin-bottom: 20px;
   }
 }

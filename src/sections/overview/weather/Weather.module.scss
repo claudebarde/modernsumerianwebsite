@@ -5,6 +5,14 @@
   padding: 20px 0px;
 }
 
+.weatherDisplay {
+  padding: 10px 40px;
+}
+
+.titleInCuneiforms {
+  text-align: right;
+}
+
 .weatherIcon {
   width: 50px;
 }
@@ -24,6 +32,14 @@
 @media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
   .main {
     padding: 20px 0px;
+  }
+
+  .weatherDisplay {
+    padding: 10px 10px;
+  }
+
+  .titleInCuneiforms {
+    text-align: left;
   }
 
   .weatherDescription {

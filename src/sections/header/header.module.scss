@@ -1,26 +1,5 @@
 @import "../../config.scss";
 
-/*.menu {
-  position: absolute;
-  top: 0px;
-  right: 10vh;
-
-  span {
-    display: inline-block;
-    margin: 10px 5px;
-    padding: 0px 10px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #595959;
-    vertical-align: middle;
-    border-bottom: solid 2px $background-color;
-  }
-
-  span:hover {
-    border-bottom: solid 2px #595959;
-  }
-}*/
-
 .menu {
   position: fixed;
   top: 0px;
@@ -104,14 +83,14 @@
 }
 
 .burger {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   font-weight: bold;
   color: #595959;
   padding: 10px;
   font-size: 1.5rem;
-  z-index: 0;
+  z-index: 80;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
