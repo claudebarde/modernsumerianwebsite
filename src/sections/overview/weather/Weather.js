@@ -269,6 +269,7 @@ const Weather = () => {
                 size="small"
                 onClick={getLocation}
                 loading={loadingUserLocation}
+                style={{ margin: "20px 0px" }}
               >
                 Load your weather
               </Button>
