@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   Row,
@@ -10,22 +10,20 @@ import {
   Tooltip,
   Icon,
   Empty,
-  Alert,
-  message
+  Pagination
 } from "antd";
 import firebase from "firebase/app";
-import "firebase/storage";
-//import "firebase/firebase-functions";
+import "firebase/firestore";
 
 import styles from "./dictionary.module.scss";
 import firebaseConfig from "../../config";
 
-import EntriesList from "./EntriesList";
-
 firebase.initializeApp(firebaseConfig);
-const storage = firebase.storage();
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+
+// Initialize Cloud Firestore through Firebase
+const db = firebase.firestore();
 
 const Dictionary = () => {
   const [orderByInstances, setOrderByInstances] = useState(false);
@@ -35,109 +33,55 @@ const Dictionary = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [displayResults, setDisplayResults] = useState([]);
   const [orderedResults, setOrderedResults] = useState(0);
-  const [dictionaryReferences, setDictionaryReferences] = useState(undefined);
-
-  const formatCharacters = word =>
-    word
-      .toLowerCase()
-      .replace(/š/g, "sh")
-      .replace(/ŋ/g, "ĝ")
-      .replace(/ḫ/g, "h")
-      .replace(/ṭ/g, "t")
-      .replace(/\./g, "")
-      .replace(/₂|₃|₄|ₓ/g, "")
-      .replace(/[0-9]/g, "");
+  const [currentDictPage, setCurrentDictPage] = useState(1);
 
   const fetchData = async (lang, word) => {
     if (lang && word) {
       // resets results pagination
       setOrderedResults(0);
-      // finds references
-      let refsToFetch = [];
+      // sets values according to language
+      let docName, dictionaryIndex, collection;
       if (lang === "sumerian") {
+        // sets loading button
         setLoadingSearch_su(true);
-        refsToFetch = dictionaryReferences
-          .filter(item => item[1].toString().includes(word))
-          .map(item => item[2]);
+        // checks if user hasn't already searched the same dictionary
+        docName = `sumerian-english-dictionary-${word[0].toUpperCase()}`;
+        collection = "sumerian_english_dictionary";
       } else if (lang === "english") {
+        // sets loading button
         setLoadingSearch_en(true);
-        refsToFetch = dictionaryReferences
-          .filter(item => item[0].toString().includes(word))
-          .map(item => item[2]);
+        // checks if user hasn't already searched the same dictionary
+        docName = `english-sumerian-dictionary-${word[0].toUpperCase()}`;
+        collection = "english_sumerian_dictionary";
       }
-      // fetches results from firestore
-      const fetchWordsInDictionary = firebase
-        .functions()
-        .httpsCallable("fetchWordsInDictionary");
-      const t0 = performance.now();
-      const results = await fetchWordsInDictionary(refsToFetch);
-      const t1 = performance.now();
-      console.log("performance:", t1 - t0);
-      // when we get the results
-      let newResults = results.data;
-      if (Array.isArray(newResults) && newResults.length > 0) {
-        newResults = newResults.map(result => ({
-          ...result,
-          sumerian: formatCharacters(result.sumerian),
-          cuneiforms: result.cuneiforms.map(item => ({
-            ...item,
-            value: formatCharacters(item.value)
-          }))
-        }));
-        newResults.sort((a, b) => (a.sumerian > b.sumerian ? 1 : -1));
-        console.log(newResults);
-        setSearchResults(newResults);
+
+      dictionaryIndex = searchResults.findIndex(dict => dict.name === docName);
+      if (dictionaryIndex !== -1) {
+        // if dictionary has been already loaded
+        processData(searchResults[dictionaryIndex].data, word);
       } else {
-        setSearchResults(undefined);
+        // fetches results
+        const doc = await db
+          .collection(collection)
+          .doc(docName)
+          .get();
+        if (doc.exists) {
+          // saves dictionary for later look-up
+          setSearchResults([
+            ...searchResults,
+            { name: docName, data: doc.data() }
+          ]);
+          processData(doc.data(), word);
+        } else {
+          console.log("No results");
+        }
       }
       setLoadingSearch_su(false);
       setLoadingSearch_en(false);
     }
   };
 
-  const resultsTable = results => {
-    // empty row
-    let row = [];
-    // final grid
-    const grid = [];
-    // we loop through the results to organize them in a table-like grid
-    results.forEach((result, index) => {
-      if (index % 12 === 0 && index !== 0) {
-        // new row
-        grid.push(
-          <Row key={result + index} className={styles.resultsTableRow}>
-            {row}
-          </Row>
-        );
-        row = [];
-        // we push elements into new row
-        row.push(
-          <Col span={2} key={result + index} className={styles.resultsTableCol}>
-            <a href={`#ref${result.reference}`}>{result.sumerian}</a>
-          </Col>
-        );
-      } else {
-        // we push elements into new row
-        row.push(
-          <Col span={2} key={result + index} className={styles.resultsTableCol}>
-            <a href={`#ref${result.reference}`}>{result.sumerian}</a>
-          </Col>
-        );
-      }
-    });
-    // leftovers
-    if (row.length > 0) {
-      grid.push(
-        <Row key="last-row" className={styles.resultsTableRow}>
-          {row}
-        </Row>
-      );
-    }
-
-    return grid;
-  };
-
-  /*const processData = (data, word) => {
+  const processData = (data, word) => {
     // processes results
     const results = Object.keys(data)
       .filter(entry => {
@@ -208,38 +152,7 @@ const Dictionary = () => {
       ));
     // saves cards
     setDisplayResults(results);
-  };*/
-
-  useEffect(() => {
-    (async () => {
-      if (window.sessionStorage) {
-        const references = window.sessionStorage.getItem(
-          "dictionaryReferences"
-        );
-        if (references) {
-          setDictionaryReferences(JSON.parse(references));
-        } else {
-          const dictionaryRef = storage.refFromURL(
-            "gs://modernsumerian.appspot.com/references.json"
-          );
-          const url = await dictionaryRef.getDownloadURL();
-          const references = await fetch(url);
-          const referencesJson = await references.json();
-          if (Array.isArray(referencesJson)) {
-            setDictionaryReferences(referencesJson);
-            window.sessionStorage.setItem(
-              "dictionaryReferences",
-              JSON.stringify(referencesJson)
-            );
-          } else {
-            setDictionaryReferences(null);
-          }
-        }
-      } else {
-        message.error("Your device does not support session storage!");
-      }
-    })();
-  }, []);
+  };
 
   return (
     <div className={`${styles.main} sections`} id="dictionarySection">
@@ -267,27 +180,6 @@ const Dictionary = () => {
           </Col>
         </Row>
         <hr />
-        {dictionaryReferences === undefined && (
-          <Alert
-            message={
-              <div>
-                Downloading Dictionary References, please wait{" "}
-                <Icon type="sync" style={{ marginLeft: "10px" }} spin />
-              </div>
-            }
-            type="info"
-            style={{ width: "40%", margin: "0 auto" }}
-            showIcon
-          />
-        )}
-        {dictionaryReferences === null && (
-          <Alert
-            message="An error has occurred, please refresh the page"
-            type="error"
-            style={{ width: "40%", margin: "0 auto" }}
-            showIcon
-          />
-        )}
         <Row gutter={24}>
           <Col xs={24} sm={12}>
             <label htmlFor="search_sumerian">In Sumerian :</label>
@@ -296,9 +188,7 @@ const Dictionary = () => {
             <Input.Search
               id="search_sumerian"
               placeholder="Search word in Sumerian"
-              onSearch={value =>
-                fetchData("sumerian", value.trim().replace(/sh/g, "š"))
-              }
+              onSearch={value => fetchData("sumerian", value.trim())}
               enterButton={
                 loadingSearch_su ? (
                   <Icon type="loading" />
@@ -316,7 +206,9 @@ const Dictionary = () => {
               id="search_english"
               placeholder="Search word in English"
               onSearch={value => {
-                fetchData("english", value.trim().replace(/sh/g, "š"));
+                fetchData("english", value.trim());
+                // resets pagination
+                setCurrentDictPage(1);
               }}
               enterButton={
                 loadingSearch_en ? (
@@ -357,16 +249,33 @@ const Dictionary = () => {
         </Row>
         <Row style={{ paddingTop: "15px" }}>
           <Col span={24}>
-            {searchResults && searchResults.length > 0 ? (
-              <>
-                <Title level={4} style={{ textAlign: "center" }}>{`${
-                  searchResults.length
-                } results`}</Title>
-                <div className={styles.resultsTable}>
-                  {resultsTable(searchResults)}
-                </div>
-                <EntriesList entries={searchResults} options={{}} />
-              </>
+            {displayResults.length > 0 ? (
+              <div className={styles.displayResults}>
+                <Row gutter={16}>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults]}
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults + 1]}
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    {displayResults[orderedResults + 2]}
+                  </Col>
+                </Row>
+                <br />
+                <Pagination
+                  size="small"
+                  current={currentDictPage}
+                  total={displayResults.length}
+                  showTotal={total => `Total ${total} results`}
+                  defaultPageSize={3}
+                  className={styles.pagination}
+                  onChange={(page, pageSize) => {
+                    setOrderedResults((page - 1) * 3);
+                    setCurrentDictPage(page);
+                  }}
+                />
+              </div>
             ) : loadingSearch_su || loadingSearch_en ? (
               <Skeleton active />
             ) : (

@@ -1,0 +1,25 @@
+.row {
+  margin: 0px;
+  margin-top: 10px;
+}
+
+.column {
+  padding: 10px;
+  padding-bottom: 0px;
+}
+
+.cuneiforms {
+  font-size: 1.8rem;
+}
+
+.noborder {
+  @extend .row;
+  border: none;
+  padding: 40px 5px 5px 0px;
+}
+
+.greenborder {
+  @extend .row;
+  border-left: solid 3px #73d13d;
+  padding: 40px 5px 5px 0px;
+}

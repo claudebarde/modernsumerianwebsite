@@ -4,6 +4,10 @@ $footer-color: #fff7e6;
 
 $card-width: 80%;
 
+html {
+  scroll-behavior: smooth;
+}
+
 .ant-drawer-content {
   background-color: #fff7e6;
 }

@@ -38,6 +38,49 @@
   text-align: center;
 }
 
+.resultsTable {
+  text-align: center;
+  font-size: 0.6rem;
+  word-break: break-all;
+  hyphens: auto;
+  padding: 0px;
+  border: solid 1px #e8e8e8;
+  border-radius: 5px;
+}
+
+.resultsTableRow {
+  border-bottom: solid 1px #e8e8e8;
+  display: flex;
+  justify-content: left;
+  align-items: stretch;
+}
+
+.resultsTableRow:last-child {
+  border-bottom: none;
+}
+
+.resultsTableCol {
+  border: none;
+  border-left: solid 1px #e8e8e8;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.resultsTableCol:first-child {
+  border-left: none;
+}
+
+.resultsTableCol:hover {
+  background-color: #fafafa;
+}
+
+.resultsTableCol a {
+  color: inherit;
+}
+
 /* Portrait and Landscape */
 @media only screen and (min-device-width: 300px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
   .dictionary {
