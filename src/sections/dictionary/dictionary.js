@@ -32,9 +32,10 @@ const Dictionary = () => {
   const [exactSearch, setExactSearch] = useState(false);
   const [loadingSearch_su, setLoadingSearch_su] = useState(false);
   const [loadingSearch_en, setLoadingSearch_en] = useState(false);
+  const [languageInput, setLanguageInput] = useState(undefined);
+  const [searchInput, setSearchInput] = useState(undefined);
   const [searchResults, setSearchResults] = useState([]);
-  const [displayResults, setDisplayResults] = useState([]);
-  const [orderedResults, setOrderedResults] = useState(0);
+  const [displayedResults, setDisplayedResults] = useState([]);
   const [dictionaryReferences, setDictionaryReferences] = useState(undefined);
 
   const formatCharacters = word =>
@@ -50,8 +51,16 @@ const Dictionary = () => {
 
   const fetchData = async (lang, word) => {
     if (lang && word) {
-      // resets results pagination
-      setOrderedResults(0);
+      setExactSearch(false);
+      setOrderByInstances(false);
+      // set language
+      setLanguageInput(lang);
+      setSearchInput(word.trim());
+      // format word
+      word = word
+        .replace(/sh/g, "š")
+        .replace(/ĝ/g, "ŋ")
+        .replace(/h/g, "ḫ");
       // finds references
       let refsToFetch = [];
       if (lang === "sumerian") {
@@ -65,30 +74,36 @@ const Dictionary = () => {
           .filter(item => item[0].toString().includes(word))
           .map(item => item[2]);
       }
-      // fetches results from firestore
-      const fetchWordsInDictionary = firebase
-        .functions()
-        .httpsCallable("fetchWordsInDictionary");
-      const t0 = performance.now();
-      const results = await fetchWordsInDictionary(refsToFetch);
-      const t1 = performance.now();
-      console.log("performance:", t1 - t0);
-      // when we get the results
-      let newResults = results.data;
-      if (Array.isArray(newResults) && newResults.length > 0) {
-        newResults = newResults.map(result => ({
-          ...result,
-          sumerian: formatCharacters(result.sumerian),
-          cuneiforms: result.cuneiforms.map(item => ({
-            ...item,
-            value: formatCharacters(item.value)
-          }))
-        }));
-        newResults.sort((a, b) => (a.sumerian > b.sumerian ? 1 : -1));
-        console.log(newResults);
-        setSearchResults(newResults);
-      } else {
-        setSearchResults(undefined);
+      try {
+        // fetches results from firestore
+        const fetchWordsInDictionary = firebase
+          .functions()
+          .httpsCallable("fetchWordsInDictionary");
+        const t0 = performance.now();
+        const results = await fetchWordsInDictionary(refsToFetch);
+        const t1 = performance.now();
+        console.log("performance:", t1 - t0);
+        // when we get the results
+        let newResults = results.data;
+        if (Array.isArray(newResults) && newResults.length > 0) {
+          newResults = newResults.map(result => ({
+            ...result,
+            sumerian: formatCharacters(result.sumerian),
+            cuneiforms: result.cuneiforms.map(item => ({
+              ...item,
+              value: formatCharacters(item.value)
+            }))
+          }));
+          newResults.sort((a, b) => (a.sumerian > b.sumerian ? 1 : -1));
+          console.log(newResults);
+          setSearchResults(newResults);
+          setDisplayedResults(newResults);
+        } else {
+          setSearchResults(undefined);
+          setDisplayedResults(undefined);
+        }
+      } catch (error) {
+        message.error("Unable to search dictionary");
       }
       setLoadingSearch_su(false);
       setLoadingSearch_en(false);
@@ -135,6 +150,66 @@ const Dictionary = () => {
     }
 
     return grid;
+  };
+
+  const orderSearchResults = checkedValues => {
+    if (checkedValues.length === 0) {
+      // default alphabetical order
+      setExactSearch(false);
+      setOrderByInstances(false);
+      setDisplayedResults(searchResults);
+    } else if (
+      checkedValues.includes("order_by_instances") &&
+      !checkedValues.includes("exact_search")
+    ) {
+      // only order by instances
+      setExactSearch(false);
+      setOrderByInstances(true);
+      const newResults = [...searchResults];
+      newResults.sort((a, b) =>
+        parseInt(a.instances) < parseInt(b.instances) ? 1 : -1
+      );
+      setDisplayedResults(newResults);
+    } else if (
+      !checkedValues.includes("order_by_instances") &&
+      checkedValues.includes("exact_search")
+    ) {
+      // only exact search
+      setExactSearch(true);
+      setOrderByInstances(false);
+      let newResults = [...searchResults];
+      if (languageInput === "sumerian") {
+        newResults = newResults.filter(
+          result => result.sumerian === searchInput
+        );
+      } else if (languageInput === "english") {
+        newResults = newResults.filter(
+          result => result.generalMeaning === searchInput
+        );
+      }
+      setDisplayedResults(newResults);
+    } else if (
+      checkedValues.includes("order_by_instances") &&
+      checkedValues.includes("exact_search")
+    ) {
+      // order by instances and exact search
+      setExactSearch(true);
+      setOrderByInstances(true);
+      let newResults = [...searchResults];
+      if (languageInput === "sumerian") {
+        newResults = newResults.filter(
+          result => result.sumerian === searchInput
+        );
+      } else if (languageInput === "english") {
+        newResults = newResults.filter(
+          result => result.generalMeaning === searchInput
+        );
+      }
+      newResults.sort((a, b) =>
+        parseInt(a.instances) < parseInt(b.instances) ? 1 : -1
+      );
+      setDisplayedResults(newResults);
+    }
   };
 
   /*const processData = (data, word) => {
@@ -296,9 +371,7 @@ const Dictionary = () => {
             <Input.Search
               id="search_sumerian"
               placeholder="Search word in Sumerian"
-              onSearch={value =>
-                fetchData("sumerian", value.trim().replace(/sh/g, "š"))
-              }
+              onSearch={value => fetchData("sumerian", value.trim())}
               enterButton={
                 loadingSearch_su ? (
                   <Icon type="loading" />
@@ -316,7 +389,7 @@ const Dictionary = () => {
               id="search_english"
               placeholder="Search word in English"
               onSearch={value => {
-                fetchData("english", value.trim().replace(/sh/g, "š"));
+                fetchData("english", value.trim());
               }}
               enterButton={
                 loadingSearch_en ? (
@@ -328,44 +401,41 @@ const Dictionary = () => {
             />
           </Col>
         </Row>
-        <Row style={{ paddingTop: "15px" }} type="flex" justify="end">
-          <Col span={23}>
-            <Checkbox.Group
-              options={[
-                {
-                  label: "Order by instances",
-                  value: "order_by_instances"
-                },
-                { label: "Exact Search", value: "exact_search" }
-              ]}
-              onChange={checkedValues => {
-                // exact search
-                if (checkedValues.includes("exact_search")) {
-                  setExactSearch(true);
-                } else {
-                  setExactSearch(false);
-                }
-                // order by instances
-                if (checkedValues.includes("order_by_instances")) {
-                  setOrderByInstances(true);
-                } else {
-                  setOrderByInstances(false);
-                }
-              }}
-            />
-          </Col>
-        </Row>
+        {displayedResults.length > 0 && (
+          <Row style={{ paddingTop: "15px" }} type="flex" justify="center">
+            <Col span={8}>
+              <Checkbox.Group
+                options={[
+                  {
+                    label: "Order by instances",
+                    value: "order_by_instances"
+                  },
+                  { label: "Exact Search", value: "exact_search" }
+                ]}
+                onChange={checkedValues => orderSearchResults(checkedValues)}
+                value={[
+                  exactSearch ? "exact_search" : "",
+                  orderByInstances ? "order_by_instances" : ""
+                ]}
+              />
+            </Col>
+          </Row>
+        )}
         <Row style={{ paddingTop: "15px" }}>
           <Col span={24}>
-            {searchResults && searchResults.length > 0 ? (
+            {displayedResults && displayedResults.length > 0 ? (
               <>
                 <Title level={4} style={{ textAlign: "center" }}>{`${
-                  searchResults.length
+                  displayedResults.length
                 } results`}</Title>
                 <div className={styles.resultsTable}>
-                  {resultsTable(searchResults)}
+                  {resultsTable(displayedResults)}
                 </div>
-                <EntriesList entries={searchResults} options={{}} />
+                <EntriesList
+                  entries={displayedResults}
+                  options={{}}
+                  search={{ lang: languageInput, word: searchInput }}
+                />
               </>
             ) : loadingSearch_su || loadingSearch_en ? (
               <Skeleton active />

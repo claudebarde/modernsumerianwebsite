@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col, Table, Typography } from "antd";
+import reactStringReplace from "react-string-replace";
 
 import styles from "./entrieslist.module.scss";
 
@@ -36,9 +37,9 @@ const formatCategory = category => {
   return format;
 };
 
-const output = (entry, i, border) => (
+const output = ({ entry, index, border, search }) => (
   <div
-    key={entry.sumerian + i}
+    key={entry.sumerian + index}
     className={styles[border]}
     id={`ref${entry.reference}`}
   >
@@ -116,6 +117,12 @@ const output = (entry, i, border) => (
               render: value => {
                 if (!value) return "--";
 
+                if (search.lang === "english") {
+                  return reactStringReplace(value, search.word, (match, i) => (
+                    <Text mark>{match}</Text>
+                  )).map((el, i) => <span key={i}>{el}</span>);
+                }
+
                 return value;
               }
             },
@@ -133,12 +140,12 @@ const output = (entry, i, border) => (
   </div>
 );
 
-const EntriesList = ({ entries, options }) => {
-  return entries.map((entry, i) => {
+const EntriesList = ({ entries, options, search }) => {
+  return entries.map((entry, index) => {
     if (parseInt(entry.instances) > 50) {
-      return output(entry, i, "greenborder");
+      return output({ entry, index, border: "greenborder", search });
     } else {
-      return output(entry, i, "noborder");
+      return output({ entry, index, border: "noborder", search });
     }
   });
 };
