@@ -37,6 +37,17 @@ const formatCategory = category => {
   return format;
 };
 
+const formatCharacters = word =>
+  word
+    .toLowerCase()
+    .replace(/š/g, "sh")
+    .replace(/ŋ/g, "ĝ")
+    .replace(/ḫ/g, "h")
+    .replace(/ṭ/g, "t")
+    .replace(/\./g, "")
+    .replace(/₂|₃|₄|ₓ/g, "")
+    .replace(/[0-9]/g, "");
+
 const output = ({ entry, index, border, search }) => (
   <div
     key={entry.sumerian + index}
@@ -44,48 +55,48 @@ const output = ({ entry, index, border, search }) => (
     id={`ref${entry.reference}`}
   >
     <Row>
-      <Col span={12} className={styles.column}>
+      <Col xs={24} span={14} className={styles.column}>
         <Row>
           <Col span={12}>
             <Title level={4}>
               <a
                 href={`http://oracc.museum.upenn.edu/epsd2/cbd/sux/sux.x${
-                  entry.reference
+                  entry.r
                 }.html`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {entry.sumerian.toUpperCase()}
+                {formatCharacters(entry.s).toUpperCase()}
               </a>
             </Title>
           </Col>
           <Col span={12}>
-            <Text>{entry.generalMeaning.toUpperCase()}</Text>
+            <Text>{entry.gm.toUpperCase()}</Text>
           </Col>
         </Row>
       </Col>
-      <Col span={12} className={styles.column}>
+      <Col xs={24} span={10} className={styles.column}>
         <Row className={styles.row}>
           <Col span={12}>
             <Text strong>Category:</Text>
           </Col>
           <Col span={12}>
-            <Text strong>{formatCategory(entry.category)}</Text>
+            <Text strong>{formatCategory(entry.ca)}</Text>
           </Col>
         </Row>
       </Col>
     </Row>
     <Row>
-      <Col span={12} className={styles.column}>
+      <Col xs={24} sm={14} className={styles.column}>
         <Table
-          dataSource={entry.cuneiforms.map((item, i) => ({
+          dataSource={entry.c.map((item, i) => ({
             ...item,
-            key: item.value + i
+            key: item.v + i
           }))}
           columns={[
             {
               title: "Cuneiforms",
-              dataIndex: "cuneiforms",
+              dataIndex: "c",
               key: "cuneiforms",
               render: value => {
                 if (value === "none") return "--";
@@ -95,25 +106,31 @@ const output = ({ entry, index, border, search }) => (
             },
             {
               title: "Value",
-              dataIndex: "value",
-              key: "value"
+              dataIndex: "v",
+              key: "value",
+              render: value => formatCharacters(value)
+            },
+            {
+              title: "Instances",
+              dataIndex: "i",
+              key: "instances"
             }
           ]}
-          size="small"
+          size="middle"
           pagination={false}
         />
       </Col>
-      <Col span={12} className={styles.column}>
+      <Col xs={24} sm={10} className={styles.column}>
         <Table
-          dataSource={entry.meanings.map((item, i) => ({
+          dataSource={entry.m.map((item, i) => ({
             ...item,
-            key: item.value + item.instances + i
+            key: item.v + item.i.toString() + i
           }))}
           columns={[
             {
               title: "Meaning",
-              dataIndex: "value",
-              key: "value",
+              dataIndex: "v",
+              key: "meaning",
               render: value => {
                 if (!value) return "--";
 
@@ -128,11 +145,11 @@ const output = ({ entry, index, border, search }) => (
             },
             {
               title: "Instances",
-              dataIndex: "instances",
+              dataIndex: "i",
               key: "instances"
             }
           ]}
-          size="small"
+          size="middle"
           pagination={false}
         />
       </Col>
@@ -142,7 +159,7 @@ const output = ({ entry, index, border, search }) => (
 
 const EntriesList = ({ entries, options, search }) => {
   return entries.map((entry, index) => {
-    if (parseInt(entry.instances) > 50) {
+    if (parseInt(entry.i) > 50) {
       return output({ entry, index, border: "greenborder", search });
     } else {
       return output({ entry, index, border: "noborder", search });

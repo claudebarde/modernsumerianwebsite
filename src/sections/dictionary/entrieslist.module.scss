@@ -23,3 +23,21 @@
   border-left: solid 3px #73d13d;
   padding: 40px 5px 5px 0px;
 }
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 300px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  .column {
+    padding: 2px;
+    padding-bottom: 0px;
+  }
+
+  .cuneiforms {
+    font-size: 1.2rem;
+    word-break: break-all;
+  }
+
+  .greenborder {
+    border-left: solid 1px #73d13d;
+    padding: 40px 0px 5px 3px;
+  }
+}

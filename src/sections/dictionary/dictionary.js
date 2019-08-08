@@ -37,6 +37,7 @@ const Dictionary = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [displayedResults, setDisplayedResults] = useState([]);
   const [dictionaryReferences, setDictionaryReferences] = useState(undefined);
+  const [windowWidth, saveWindowWidth] = useState(undefined);
 
   const formatCharacters = word =>
     word
@@ -50,12 +51,15 @@ const Dictionary = () => {
       .replace(/[0-9]/g, "");
 
   const fetchData = async (lang, word) => {
-    if (lang && word) {
+    if (lang && word && word.trim() !== searchInput) {
       setExactSearch(false);
       setOrderByInstances(false);
       // set language
       setLanguageInput(lang);
       setSearchInput(word.trim());
+      // resets search data
+      setSearchResults([]);
+      setDisplayedResults([]);
       // format word
       word = word
         .replace(/sh/g, "š")
@@ -88,13 +92,13 @@ const Dictionary = () => {
         if (Array.isArray(newResults) && newResults.length > 0) {
           newResults = newResults.map(result => ({
             ...result,
-            sumerian: formatCharacters(result.sumerian),
-            cuneiforms: result.cuneiforms.map(item => ({
+            sumerian: formatCharacters(result.s),
+            cuneiforms: result.c.map(item => ({
               ...item,
-              value: formatCharacters(item.value)
+              value: formatCharacters(item.v)
             }))
           }));
-          newResults.sort((a, b) => (a.sumerian > b.sumerian ? 1 : -1));
+          newResults.sort((a, b) => (a.s > b.s ? 1 : -1));
           console.log(newResults);
           setSearchResults(newResults);
           setDisplayedResults(newResults);
@@ -115,9 +119,14 @@ const Dictionary = () => {
     let row = [];
     // final grid
     const grid = [];
+    // number of elements per row depends on viewport width
+    let numberOfCols = 4;
+    if (windowWidth && windowWidth >= 667) {
+      numberOfCols = 12;
+    }
     // we loop through the results to organize them in a table-like grid
     results.forEach((result, index) => {
-      if (index % 12 === 0 && index !== 0) {
+      if (index % numberOfCols === 0 && index !== 0) {
         // new row
         grid.push(
           <Row key={result + index} className={styles.resultsTableRow}>
@@ -127,15 +136,25 @@ const Dictionary = () => {
         row = [];
         // we push elements into new row
         row.push(
-          <Col span={2} key={result + index} className={styles.resultsTableCol}>
-            <a href={`#ref${result.reference}`}>{result.sumerian}</a>
+          <Col
+            xs={6}
+            sm={2}
+            key={result + index}
+            className={styles.resultsTableCol}
+          >
+            <a href={`#ref${result.r}`}>{result.s}</a>
           </Col>
         );
       } else {
         // we push elements into new row
         row.push(
-          <Col span={2} key={result + index} className={styles.resultsTableCol}>
-            <a href={`#ref${result.reference}`}>{result.sumerian}</a>
+          <Col
+            xs={6}
+            sm={2}
+            key={result + index}
+            className={styles.resultsTableCol}
+          >
+            <a href={`#ref${result.r}`}>{result.s}</a>
           </Col>
         );
       }
@@ -166,9 +185,7 @@ const Dictionary = () => {
       setExactSearch(false);
       setOrderByInstances(true);
       const newResults = [...searchResults];
-      newResults.sort((a, b) =>
-        parseInt(a.instances) < parseInt(b.instances) ? 1 : -1
-      );
+      newResults.sort((a, b) => (parseInt(a.i) < parseInt(b.i) ? 1 : -1));
       setDisplayedResults(newResults);
     } else if (
       !checkedValues.includes("order_by_instances") &&
@@ -179,13 +196,9 @@ const Dictionary = () => {
       setOrderByInstances(false);
       let newResults = [...searchResults];
       if (languageInput === "sumerian") {
-        newResults = newResults.filter(
-          result => result.sumerian === searchInput
-        );
+        newResults = newResults.filter(result => result.s === searchInput);
       } else if (languageInput === "english") {
-        newResults = newResults.filter(
-          result => result.generalMeaning === searchInput
-        );
+        newResults = newResults.filter(result => result.gm === searchInput);
       }
       setDisplayedResults(newResults);
     } else if (
@@ -198,16 +211,12 @@ const Dictionary = () => {
       let newResults = [...searchResults];
       if (languageInput === "sumerian") {
         newResults = newResults.filter(
-          result => result.sumerian === searchInput
+          result => result.searchResults === searchInput
         );
       } else if (languageInput === "english") {
-        newResults = newResults.filter(
-          result => result.generalMeaning === searchInput
-        );
+        newResults = newResults.filter(result => result.gm === searchInput);
       }
-      newResults.sort((a, b) =>
-        parseInt(a.instances) < parseInt(b.instances) ? 1 : -1
-      );
+      newResults.sort((a, b) => (parseInt(a.i) < parseInt(b.i) ? 1 : -1));
       setDisplayedResults(newResults);
     }
   };
@@ -286,6 +295,7 @@ const Dictionary = () => {
   };*/
 
   useEffect(() => {
+    saveWindowWidth(window.innerWidth);
     (async () => {
       if (window.sessionStorage) {
         const references = window.sessionStorage.getItem(
@@ -403,7 +413,7 @@ const Dictionary = () => {
         </Row>
         {displayedResults.length > 0 && (
           <Row style={{ paddingTop: "15px" }} type="flex" justify="center">
-            <Col span={8}>
+            <Col xs={16} sm={8}>
               <Checkbox.Group
                 options={[
                   {
