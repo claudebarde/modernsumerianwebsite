@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Table, Typography } from "antd";
+import { Row, Col, Table, Typography, Tag } from "antd";
 import reactStringReplace from "react-string-replace";
 
 import styles from "./entrieslist.module.scss";
@@ -58,17 +58,24 @@ const output = ({ entry, index, border, search }) => (
       <Col xs={24} span={14} className={styles.column}>
         <Row>
           <Col span={12}>
-            <Title level={4}>
-              <a
-                href={`http://oracc.museum.upenn.edu/epsd2/cbd/sux/sux.x${
-                  entry.r
-                }.html`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {formatCharacters(entry.s).toUpperCase()}
-              </a>
-            </Title>
+            {entry.ms === false ? (
+              <Title level={4}>
+                <a
+                  href={`http://oracc.museum.upenn.edu/epsd2/cbd/sux/sux.x${
+                    entry.r
+                  }.html`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {formatCharacters(entry.s).toUpperCase()}
+                </a>
+              </Title>
+            ) : (
+              <Title level={4}>
+                {formatCharacters(entry.s).toUpperCase()}{" "}
+                <Tag color="blue">modern sumerian</Tag>
+              </Title>
+            )}
           </Col>
           <Col span={12}>
             <Text>{entry.gm.toUpperCase()}</Text>

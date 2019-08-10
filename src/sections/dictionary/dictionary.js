@@ -60,14 +60,14 @@ const Dictionary = () => {
       // resets search data
       setSearchResults([]);
       setDisplayedResults([]);
-      // format word
-      word = word
-        .replace(/sh/g, "š")
-        .replace(/ĝ/g, "ŋ")
-        .replace(/h/g, "ḫ");
       // finds references
       let refsToFetch = [];
       if (lang === "sumerian") {
+        // format word
+        word = word
+          .replace(/sh/g, "š")
+          .replace(/ĝ/g, "ŋ")
+          .replace(/h/g, "ḫ");
         setLoadingSearch_su(true);
         refsToFetch = dictionaryReferences
           .filter(item => item[1].toString().includes(word))
@@ -221,79 +221,6 @@ const Dictionary = () => {
     }
   };
 
-  /*const processData = (data, word) => {
-    // processes results
-    const results = Object.keys(data)
-      .filter(entry => {
-        if (exactSearch) {
-          // if exact search is requested
-          return entry === word;
-        }
-
-        return entry.indexOf(word) !== -1;
-      })
-      .map(entry => data[entry])
-      .flat()
-      .sort((a, b) => {
-        // order by instances if required
-        if (orderByInstances) {
-          return b.instances - a.instances;
-        }
-
-        return 0;
-      })
-      .map(item => (
-        // builds individual card for words
-        <Card
-          hoverable
-          cover={
-            <img
-              src={`http://psd.museum.upenn.edu/epsd/psl/img/popup/${
-                item.images[0]
-              }`}
-              alt="cuneiform"
-              className={styles.cuneiformWord}
-            />
-          }
-          key={item.reference}
-          className={styles.displayWord}
-        >
-          <Tooltip title="Link to the ePSD" placement="right">
-            <Text strong>
-              <a
-                href={`http://psd.museum.upenn.edu/epsd/${item.reference}.html`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "inherit" }}
-              >
-                {item.sumerian.toUpperCase().replace("Š", "SH")}
-              </a>
-            </Text>
-          </Tooltip>
-          <br />
-          <br />
-          <Text>[{item.generalMeaning.toLowerCase()}]</Text>
-          <br />
-          <br />
-          <Text>{item.meanings.join(", ")}</Text>
-          <br />
-          <br />
-          <Text type="secondary">
-            {item.instances === 0
-              ? "No instance"
-              : item.instances === 1
-              ? `${item.instances} instance`
-              : `${item.instances} instances`}
-          </Text>
-          <br />
-          <br />
-          <Text disabled>reference: {item.reference}</Text>
-        </Card>
-      ));
-    // saves cards
-    setDisplayResults(results);
-  };*/
-
   useEffect(() => {
     saveWindowWidth(window.innerWidth);
     (async () => {
@@ -411,7 +338,7 @@ const Dictionary = () => {
             />
           </Col>
         </Row>
-        {displayedResults.length > 0 && (
+        {displayedResults && displayedResults.length > 0 && (
           <Row style={{ paddingTop: "15px" }} type="flex" justify="center">
             <Col xs={16} sm={8}>
               <Checkbox.Group
